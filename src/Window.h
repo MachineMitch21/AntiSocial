@@ -6,7 +6,6 @@
 #include <GLFW/glfw3.h>
 #include <string>
 #include <iostream>
-#include "vector3.h"
 
 #define MAX_KEYS 1024
 #define MAX_MOUSE_BUTTONS 32

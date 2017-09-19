@@ -1,6 +1,6 @@
-CC	= g++
+CC		= g++
 CFLAGS	= -Iinclude/ -g -Wall -std=c++11
-SRC	:= $(wildcard src/*.cpp)
+SRC		:= $(wildcard src/*.cpp)
 OBJS	:= $(addprefix obj/,$(notdir $(SRC:.cpp=.o)))
 LIBS	= -lGLEW -lglfw3 -lGL -lX11 -lXi -lXrandr -lXxf86vm -lXinerama -lXcursor -lrt -lm -pthread -ldl
 DEPDIR 	= -Llib/

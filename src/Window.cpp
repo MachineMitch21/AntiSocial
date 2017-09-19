@@ -24,8 +24,6 @@ Window::Window(const std::string title, int width, int height)
 		glfwTerminate();
 
 	glewExperimental = GL_TRUE;
-	
-	as_math::Vector3 v(1, 2, 3);
 }
 
 bool Window::IsClosed() {
@@ -101,6 +99,9 @@ Window::~Window()
 bool Window::init() {
 	bool isInitialized = true;
 	GLenum status;
+
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
