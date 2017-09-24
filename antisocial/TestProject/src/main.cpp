@@ -25,7 +25,6 @@ int main(int argc, char** argv)
 
 	while(!w.IsClosed())
 	{
-		
 		if (w.isKeyPressed(GLFW_KEY_ESCAPE))
 		{
 			exit(0);
@@ -51,5 +50,6 @@ int main(int argc, char** argv)
 		
 		w.update();	
 	}
+
 	return 0;
 }
