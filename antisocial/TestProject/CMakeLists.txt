@@ -9,8 +9,6 @@ SET(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH}../build)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-message(${PROJECT_SOURCE_DIR})
-
 include_directories(${PROJECT_SOURCE_DIR}/../include ${PROJECT_SOURCE_DIR}/../external)
 find_library(ASLIB antisocial)
 
