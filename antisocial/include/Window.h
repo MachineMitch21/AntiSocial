@@ -29,6 +29,7 @@ public:
 	int getWidth();
 	int getHeight();
 	void setCursor(CURSOR_MODE mode);
+	void setIcon(const std::string path);
 	
 	bool isKeyPressed(unsigned int keycode);
 	bool isMouseButtonPressed(unsigned int button);
@@ -44,15 +45,15 @@ private:
 	friend void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 	
 private:
-	GLFWwindow* m_window;
+	GLFWwindow* _window;
 
-	bool cursorActive;
-	int m_height;
-	int m_width;
-	std::string m_title;
-	static bool	m_keys[MAX_KEYS];
-	static bool	m_buttons[MAX_MOUSE_BUTTONS];
-	static double mx, my;
+	bool _cursorActive;
+	int _height;
+	int _width;
+	std::string _title;
+	static bool	_keys[MAX_KEYS];
+	static bool	_buttons[MAX_MOUSE_BUTTONS];
+	static double _x, _y;
 
 };
 

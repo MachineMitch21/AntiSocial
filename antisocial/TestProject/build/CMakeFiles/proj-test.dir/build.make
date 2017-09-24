@@ -90,6 +90,7 @@ proj__test_EXTERNAL_OBJECTS =
 
 proj-test: CMakeFiles/proj-test.dir/src/main.cpp.o
 proj-test: CMakeFiles/proj-test.dir/build.make
+proj-test: /home/mitch/Documents/AntiSocial/antisocial/build/libantisocial.so
 proj-test: CMakeFiles/proj-test.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/mitch/Documents/AntiSocial/antisocial/TestProject/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable proj-test"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/proj-test.dir/link.txt --verbose=$(VERBOSE)

@@ -1,33 +1,31 @@
 #include "Window.h"
 
-bool Window::m_keys[MAX_KEYS];
-bool Window::m_buttons[MAX_MOUSE_BUTTONS];
-double Window::mx;
-double Window::my;
+bool Window::_keys[MAX_KEYS];
+bool Window::_buttons[MAX_MOUSE_BUTTONS];
+double Window::_x;
+double Window::_y;
 
 
 Window::Window(const std::string title, int width, int height)
 {
-	m_title = title;
-	m_width = width;
-	m_height = height;
+	_title = title;
+	_width = width;
+	_height = height;
 
 	for (int i = 0; i < MAX_KEYS; i++) {
-		m_keys[i] = false;
+		_keys[i] = false;
 	}
 
 	for (int i = 0; i < MAX_MOUSE_BUTTONS; i++) {
-		m_buttons[i] = false;
+		_buttons[i] = false;
 	}
 
 	if (!init())
 		glfwTerminate();
-
-	glewExperimental = GL_TRUE;
 }
 
 bool Window::IsClosed() {
-	return glfwWindowShouldClose(m_window);
+	return glfwWindowShouldClose(_window);
 }
 
 bool Window::isKeyPressed(unsigned int keycode) {
@@ -35,55 +33,75 @@ bool Window::isKeyPressed(unsigned int keycode) {
 	if (keycode >= MAX_KEYS) {
 		return false;
 	}
-	return m_keys[keycode];
+	return _keys[keycode];
 }
 
 bool Window::isMouseButtonPressed(unsigned int button) {
 	if (button >= MAX_MOUSE_BUTTONS) {
 		return false;
 	}
-	return m_buttons[button];
+	return _buttons[button];
 }
 
 void Window::close() {
-	glfwSetWindowShouldClose(m_window, GL_TRUE);
+	glfwSetWindowShouldClose(_window, GL_TRUE);
 }
 
 double Window::getX() {
-	return mx;
+	return _x;
 }
 
 double Window::getY() {
-	return my;
+	return _y;
 }
 
 int Window::getWidth() {
-	return m_width;
+	return _width;
 }
 
 int Window::getHeight() {
-	return m_height;
+	return _height;
 }
 
 void Window::setCursor(CURSOR_MODE mode) {
 	if (mode == DISABLE) {
-		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-		cursorActive = false;
+		glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		_cursorActive = false;
 	}
 
 	else if (mode == SHOW) {
-		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-		cursorActive = true;
+		glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		_cursorActive = true;
 	}
 }
 
+void Window::setIcon(const std::string path) {
+
+#ifndef __APPLE__
+
+	//TODO: figure out why these functions aren't declared
+	/*	
+	if (path != "") { 
+		GLFWimage icon = load_icon(path);
+		glfwSetWindowIcon(_window, 1, icon);	
+	}
+	else {
+		glfwSetWindowIcon(_window, 0, NULL);
+	}
+	*/
+
+#else
+	std::cout << "Icon cannot be set on OS X" << std::endl;
+#endif // __APPLE__
+}
+
 bool Window::isCursorActive() {
-	return cursorActive;
+	return _cursorActive;
 }
 
 void Window::update() {
 	glfwPollEvents();
-	glfwSwapBuffers(m_window);
+	glfwSwapBuffers(_window);
 }
 
 void Window::clear(float r, float g, float b, float a) {
@@ -104,20 +122,32 @@ bool Window::init() {
 	glDepthFunc(GL_LESS);
 
 	glfwInit();
+
+	std::cout << "Using GLFW VERSION: " << glfwGetVersionString() << std::endl;	
+
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
-	m_window = glfwCreateWindow(m_width, m_height, m_title.c_str(), NULL, NULL);
+	GLFWvidmode* mode;
+	GLFWmonitor* primary;
 
-	if (m_window == nullptr) {
+	primary = glfwGetPrimaryMonitor();
+	mode = (GLFWvidmode*)glfwGetVideoMode(primary);
+
+	_window = glfwCreateWindow(mode->width, mode->height, _title.c_str(), primary, NULL);
+
+	if (_window == nullptr) {
 		std::cerr << "Failed to create GLFW window!" << std::endl;
 		isInitialized = false;
 	}
 
-	glfwMakeContextCurrent(m_window);
-	glViewport(0, 0, m_width, m_height);
+	glfwMakeContextCurrent(_window);
+	glViewport(0, 0, _width, _height);
+
+	glewExperimental = GL_TRUE;
 
 	status = glewInit();
 
@@ -126,14 +156,14 @@ bool Window::init() {
 		isInitialized = false;
 	}
 
-	glfwGetFramebufferSize(m_window, &m_width, &m_height);
-	glfwSetWindowUserPointer(m_window, this);
+	glfwGetFramebufferSize(_window, &_width, &_height);
+	glfwSetWindowUserPointer(_window, this);
 
-	glfwSetKeyCallback(m_window, key_callback);
-	glfwSetFramebufferSizeCallback(m_window, framebuffer_size_callback);
-	glfwSetCursorPosCallback(m_window, cursor_position_callback);
-	glfwSetMouseButtonCallback(m_window, mouse_button_callback);
-	glfwSetScrollCallback(m_window, scroll_callback);
+	glfwSetKeyCallback(_window, key_callback);
+	glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
+	glfwSetCursorPosCallback(_window, cursor_position_callback);
+	glfwSetMouseButtonCallback(_window, mouse_button_callback);
+	glfwSetScrollCallback(_window, scroll_callback);
 	
 	return isInitialized;
 }
@@ -142,25 +172,25 @@ bool Window::init() {
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
 	Window* win = (Window*)glfwGetWindowUserPointer(window);
-	win->m_keys[key] = (action != GLFW_RELEASE);
+	win->_keys[key] = (action != GLFW_RELEASE);
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	Window* win = (Window*)glfwGetWindowUserPointer(window);
-	win->m_width = width;
-	win->m_height = height;
+	win->_width = width;
+	win->_height = height;
 	glViewport(0, 0, width, height);
 }
 
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
 	Window* win = (Window*)glfwGetWindowUserPointer(window);
-	win->mx = xpos;
-	win->my = ypos;
+	win->_x = xpos;
+	win->_y = ypos;
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
 	Window* win = (Window*)glfwGetWindowUserPointer(window);
-	win->m_buttons[button] = (action != GLFW_RELEASE);
+	win->_buttons[button] = (action != GLFW_RELEASE);
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
