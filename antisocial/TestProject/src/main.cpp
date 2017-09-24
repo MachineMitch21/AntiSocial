@@ -7,6 +7,8 @@ int main(int argc, char** argv)
 {
 	Window w("USING ANTISOCIAL LIB", 800, 600);
 
+	w.setIcon("../../extras/antisocial_icon.png");
+
 	float vertices[]
 	{
 		 0.0f,  0.5f, 0.0f,

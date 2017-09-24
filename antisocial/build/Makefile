@@ -177,6 +177,33 @@ src/Window.cpp.s:
 	$(MAKE) -f CMakeFiles/antisocial.dir/build.make CMakeFiles/antisocial.dir/src/Window.cpp.s
 .PHONY : src/Window.cpp.s
 
+src/stb_image.o: src/stb_image.c.o
+
+.PHONY : src/stb_image.o
+
+# target to build an object file
+src/stb_image.c.o:
+	$(MAKE) -f CMakeFiles/antisocial.dir/build.make CMakeFiles/antisocial.dir/src/stb_image.c.o
+.PHONY : src/stb_image.c.o
+
+src/stb_image.i: src/stb_image.c.i
+
+.PHONY : src/stb_image.i
+
+# target to preprocess a source file
+src/stb_image.c.i:
+	$(MAKE) -f CMakeFiles/antisocial.dir/build.make CMakeFiles/antisocial.dir/src/stb_image.c.i
+.PHONY : src/stb_image.c.i
+
+src/stb_image.s: src/stb_image.c.s
+
+.PHONY : src/stb_image.s
+
+# target to generate assembly for a file
+src/stb_image.c.s:
+	$(MAKE) -f CMakeFiles/antisocial.dir/build.make CMakeFiles/antisocial.dir/src/stb_image.c.s
+.PHONY : src/stb_image.c.s
+
 src/vector2.o: src/vector2.cpp.o
 
 .PHONY : src/vector2.o
@@ -273,6 +300,9 @@ help:
 	@echo "... src/Window.o"
 	@echo "... src/Window.i"
 	@echo "... src/Window.s"
+	@echo "... src/stb_image.o"
+	@echo "... src/stb_image.i"
+	@echo "... src/stb_image.s"
 	@echo "... src/vector2.o"
 	@echo "... src/vector2.i"
 	@echo "... src/vector2.s"

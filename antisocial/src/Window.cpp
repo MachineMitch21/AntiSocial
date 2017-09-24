@@ -1,5 +1,7 @@
 #include "Window.h"
 
+#include "stb_image.h"
+
 bool Window::_keys[MAX_KEYS];
 bool Window::_buttons[MAX_MOUSE_BUTTONS];
 double Window::_x;
@@ -79,16 +81,26 @@ void Window::setIcon(const std::string path) {
 
 #ifndef __APPLE__
 
-	//TODO: figure out why these functions aren't declared
-	/*	
-	if (path != "") { 
-		GLFWimage icon = load_icon(path);
-		glfwSetWindowIcon(_window, 1, icon);	
+	if (path != "") {
+		int width, height, numComponents;
+		
+		GLFWimage icon[1];
+
+		icon[0].pixels = stbi_load(path.c_str(), &width, &height, &numComponents, 4);
+
+		if (icon[0].pixels == NULL) {
+			std::cerr << "Failed to load icon image" << std::endl;
+			return;
+		}
+		
+		glfwSetWindowIcon(_window, 1, icon);
+
+		stbi_image_free(icon[0].pixels);
+			
 	}
 	else {
 		glfwSetWindowIcon(_window, 0, NULL);
 	}
-	*/
 
 #else
 	std::cout << "Icon cannot be set on OS X" << std::endl;
@@ -126,18 +138,20 @@ bool Window::init() {
 	std::cout << "Using GLFW VERSION: " << glfwGetVersionString() << std::endl;	
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
+	//TODO: Setup fullscreen to non-fullscreen modes...
+	//		For now the window will default to the width and height it was initialized with
 	GLFWvidmode* mode;
 	GLFWmonitor* primary;
 
 	primary = glfwGetPrimaryMonitor();
 	mode = (GLFWvidmode*)glfwGetVideoMode(primary);
 
-	_window = glfwCreateWindow(mode->width, mode->height, _title.c_str(), primary, NULL);
+	_window = glfwCreateWindow(_width, _height, _title.c_str(), NULL, NULL);
 
 	if (_window == nullptr) {
 		std::cerr << "Failed to create GLFW window!" << std::endl;

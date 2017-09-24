@@ -30,6 +30,10 @@ string
 iostream
 -
 
+../include/stb_image.h
+stdio.h
+-
+
 ../include/vector2.h
 iostream
 -
@@ -49,6 +53,8 @@ Shader.h
 /home/mitch/Documents/AntiSocial/antisocial/src/Window.cpp
 Window.h
 /home/mitch/Documents/AntiSocial/antisocial/src/Window.h
+stb_image.h
+/home/mitch/Documents/AntiSocial/antisocial/src/stb_image.h
 
 /home/mitch/Documents/AntiSocial/antisocial/src/vector2.cpp
 vector2.h
