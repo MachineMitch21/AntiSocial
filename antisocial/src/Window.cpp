@@ -9,10 +9,10 @@ double Window::_y;
 
 
 Window::Window(const std::string title, int width, int height)
+	: 	_title(title),
+		_width(width),
+		_height(height)
 {
-	_title = title;
-	_width = width;
-	_height = height;
 
 	for (int i = 0; i < MAX_KEYS; i++) {
 		_keys[i] = false;
@@ -111,8 +111,16 @@ bool Window::isCursorActive() {
 	return _cursorActive;
 }
 
+bool Window::isMinimized() {
+	return _minimized;
+}
+
+void Window::enableVSYNC(bool enable) {
+	glfwSwapInterval(enable);
+}
+
 void Window::update() {
-	glfwPollEvents();
+	glfwWaitEvents();
 	glfwSwapBuffers(_window);
 }
 
@@ -178,6 +186,7 @@ bool Window::init() {
 	glfwSetCursorPosCallback(_window, cursor_position_callback);
 	glfwSetMouseButtonCallback(_window, mouse_button_callback);
 	glfwSetScrollCallback(_window, scroll_callback);
+	glfwSetWindowIconifyCallback(_window, window_iconify_callback);
 	
 	return isInitialized;
 }
@@ -209,5 +218,16 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 	Window* win = (Window*)glfwGetWindowUserPointer(window);
+}
+
+void window_iconify_callback(GLFWwindow* window, int iconified) {
+	Window* win = (Window*)glfwGetWindowUserPointer(window);
+
+	win->_minimized = iconified;
+}
+
+void error_callback(int error, const char* description) {
+	//TODO: Create a logging system that can log these errors for future reference
+	std::cerr << "ERROR::(" << error << ")::\n" << description << std::endl;
 }
 

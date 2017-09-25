@@ -8,6 +8,7 @@ int main(int argc, char** argv)
 	Window w("USING ANTISOCIAL LIB", 800, 600);
 
 	w.setIcon("../../extras/antisocial_icon.png");
+	w.enableVSYNC(true);
 
 	float vertices[]
 	{
@@ -31,14 +32,14 @@ int main(int argc, char** argv)
 		}
 
 		w.clear(.25f, .5f, .75f, 1.0f);
-		
+	
 		glGenBuffers(1, &vbo);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
 
 		glGenVertexArrays(1, &vao);
 		glBindVertexArray(vao);
-		
+	
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (GLvoid*)0);
@@ -47,8 +48,8 @@ int main(int argc, char** argv)
 		glBindVertexArray(0);
 
 		shader.bind();
-		
-		w.update();	
+
+		w.update();
 	}
 
 	return 0;

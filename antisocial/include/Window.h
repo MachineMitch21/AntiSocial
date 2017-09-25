@@ -34,7 +34,10 @@ public:
 	bool isKeyPressed(unsigned int keycode);
 	bool isMouseButtonPressed(unsigned int button);
 	bool isCursorActive();
+	bool isMinimized();
 	void close();
+
+	void enableVSYNC(bool enable);
 
 private:
 	bool init();
@@ -43,17 +46,20 @@ private:
 	friend void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 	friend void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 	friend void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+	friend void window_iconify_callback(GLFWwindow* window, int iconified);
+	friend void error_callback(int error, const char* description);
 	
 private:
 	GLFWwindow* _window;
 
-	bool _cursorActive;
+	std::string _title;
 	int _height;
 	int _width;
-	std::string _title;
+	static double _x, _y;
+	bool _cursorActive;
+	bool _minimized;
 	static bool	_keys[MAX_KEYS];
 	static bool	_buttons[MAX_MOUSE_BUTTONS];
-	static double _x, _y;
 
 };
 
@@ -62,5 +68,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+void window_iconify_callback(GLFWwindow* window, int iconified);
+void error_callback(int error, const char* description);
 
 #endif
