@@ -187,6 +187,7 @@ bool Window::init() {
 	glfwSetMouseButtonCallback(_window, mouse_button_callback);
 	glfwSetScrollCallback(_window, scroll_callback);
 	glfwSetWindowIconifyCallback(_window, window_iconify_callback);
+	glfwSetErrorCallback(error_callback);
 	
 	return isInitialized;
 }
