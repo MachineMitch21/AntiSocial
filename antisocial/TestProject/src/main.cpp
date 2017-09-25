@@ -5,7 +5,7 @@
 
 int main(int argc, char** argv)
 {
-	Window w("USING ANTISOCIAL LIB", 800, 600);
+	antisocial::Window w("USING ANTISOCIAL LIB", 800, 600);
 
 	w.setIcon("../../extras/antisocial_icon.png");
 	w.enableVSYNC(true);
@@ -20,7 +20,7 @@ int main(int argc, char** argv)
 	std::string srcs[2] = { "../../shaders/shader.vert", "../../shaders/shader.frag" };
 	GLenum types[2] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
 
-	Shader shader(srcs, types);
+	antisocial::Shader shader(srcs, types);
 		
 	GLuint vao, vbo;
 

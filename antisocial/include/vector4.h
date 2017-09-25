@@ -9,23 +9,25 @@ namespace as_math {
 	class Vector4
 	{
 	public:
-		Vector4(float _x, float _y, float _z, float _w);
+		Vector4(float x, float y, float z, float w);
 
 		~Vector4();
 
 		float magnitude();
-		float dot_product(Vector4& v);
+		float dot_product(const Vector4& v);
+		Vector4 add(const Vector4& v);
+		Vector4 subtract(const Vector4& v);
 
-		float operator*(Vector4& v);
+		float operator*(const Vector4& v);
 		Vector4 operator+(const Vector4& v);
 		Vector4 operator-(const Vector4& v);
 
 		friend ostream& operator<<(ostream& os, const Vector4& v) {
-			return os << "(" << v.x << ", " << v.y << ", " << v.z << ", " << v.w << ")";
+			return os << "(" << v._x << ", " << v._y << ", " << v._z << ", " << v._w << ")";
 		}
 
 	private:
-		float x = 0, y = 0, z = 0, w = 0;
+		float _x = 0, _y = 0, _z = 0, _w = 0;
 
 	protected:
 	};

@@ -9,24 +9,30 @@
 #define MAX_SHADERS 2
 #define ERR_LOG 512
 
-class Shader
-{
-public:
-	Shader(std::string* files, GLenum* types);
-	~Shader();
+namespace antisocial {
 
-	void bind();
-	GLuint& getProgram();
+	class Shader
+	{
+	public:
+		Shader(std::string* files, GLenum* types);
+		~Shader();
 
-private:
-	void link_program();
-	GLuint compile_shader(const std::string& shader_src, GLenum shader_type);
-	std::string load_shader(const std::string& filename);
+		void bind();
+		GLuint& getProgram();
 
-private:
-	GLuint m_shaders[MAX_SHADERS];
-	GLuint m_program;
-	GLint success;
-	GLchar err_log[ERR_LOG];
-};
+	private:
+		void link_program();
+		GLuint compile_shader(const std::string& shader_src, GLenum shader_type);
+		std::string load_shader(const std::string& filename);
+
+	private:
+		GLuint m_shaders[MAX_SHADERS];
+		GLuint m_program;
+		GLint success;
+		GLchar err_log[ERR_LOG];
+	};
+
+}
+
+
 

@@ -1,5 +1,7 @@
 #include "Shader.h"
 
+using antisocial::Shader;
+
 Shader::Shader(std::string* files, GLenum* types)
 {
 	m_program = glCreateProgram();

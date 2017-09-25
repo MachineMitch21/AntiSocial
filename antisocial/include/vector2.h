@@ -5,26 +5,29 @@
 
 using std::ostream;
 
-namespace as_math {
+namespace antisocial {
+
 	class Vector2
 	{
 	public:
-		Vector2(float _x, float _y);
+		Vector2(float x, float y);
 		~Vector2();
 
 		float magnitude();
-		float dot_product(Vector2& v);
+		float dot_product(const Vector2& v);
+		Vector2 add(const Vector2& v);
+		Vector2 subtract(const Vector2& v);
 
-		float operator*(Vector2& v);
+		float operator*(const Vector2& v);
 		Vector2 operator+(const Vector2& v);
 		Vector2 operator-(const Vector2& v);
 
 		friend ostream& operator<<(ostream& os, const Vector2& v) {
-			return os << "(" << v.x << ", " << v.y << ")";
+			return os << "(" << v._x << ", " << v._y << ")";
 		}
 
 	private:
-		float x = 0, y = 0;
+		float _x = 0, _y = 0;
 
 	protected:
 

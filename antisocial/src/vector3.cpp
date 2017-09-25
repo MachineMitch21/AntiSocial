@@ -3,8 +3,8 @@
 
 using as_math::Vector3;
 
-Vector3::Vector3(float _x, float _y, float _z)
-	: x(_x), y(_y), z(_z)
+Vector3::Vector3(float x, float y, float z)
+	: _x(x), _y(y), _z(z)
 {
 
 }
@@ -14,31 +14,40 @@ Vector3::~Vector3() {
 }
 
 float Vector3::magnitude() {
-	return sqrt((x * x) + (y * y) + (z * z));
+	return sqrt((_x * _x) + (_y * _y) + (_z * _z));
 }
 
-Vector3 Vector3::cross_product(Vector3& v) {
-	return Vector3(	(y * v.z) - (z * v.y),
-					(z * v.x) - (x * v.z),
-					(x * v.y) - (y * v.x)	);
+Vector3 Vector3::cross_product(const Vector3& v) {
+	return Vector3(	(_y * v._z) - (_z * v._y),
+					(_z * v._x) - (_x * v._z),
+					(_x * v._y) - (_y * v._x)	);
 }
 
-float Vector3::dot_product(Vector3& v) {
-	return (x * v.x) + (y * v.y) + (z * v.z);
+float Vector3::dot_product(const Vector3& v) {
+	return (_x * v._x) + (_y * v._y) + (_z * v._z);
 }
 
-float Vector3::operator*(Vector3& v) {
+Vector3 Vector3::add(const Vector3& v) {
+	return Vector3(_x + v._x, _y + v._y, _z + v._z);
+}
+		
+Vector3 Vector3::subtract(const Vector3& v) {
+	return Vector3(_x - v._x, _y - v._y, _z - v._z);
+}
+
+
+float Vector3::operator*(const Vector3& v) {
 	return dot_product(v);
 }
 
 Vector3 Vector3::operator*(const float& scalar) {
-	return Vector3(x * scalar, y * scalar, z * scalar);
+	return Vector3(_x * scalar, _y * scalar, _z * scalar);
 }
 
 Vector3 Vector3::operator+(const Vector3& v) {
-	return Vector3(x + v.x, y + v.y, z + v.z);
+	return add(v);
 }
 
 Vector3 Vector3::operator-(const Vector3& v) {
-	return Vector3(x - v.x, y - v.y, z - v.z);
+	return subtract(v);
 }

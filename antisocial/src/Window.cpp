@@ -1,5 +1,7 @@
 #include "Window.h"
 
+using antisocial::Window;
+
 #include "stb_image.h"
 
 bool Window::_keys[MAX_KEYS];
@@ -126,7 +128,7 @@ void Window::update() {
 
 void Window::clear(float r, float g, float b, float a) {
 	glClearColor(r, g, b, a);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 }
 
 Window::~Window()
@@ -138,7 +140,7 @@ bool Window::init() {
 	bool isInitialized = true;
 	GLenum status;
 
-	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST | GL_STENCIL_TEST);
 	glDepthFunc(GL_LESS);
 
 	glfwInit();
@@ -194,40 +196,40 @@ bool Window::init() {
 
 //Callback functions
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
+void antisocial::key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
 	Window* win = (Window*)glfwGetWindowUserPointer(window);
 	win->_keys[key] = (action != GLFW_RELEASE);
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+void antisocial::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	Window* win = (Window*)glfwGetWindowUserPointer(window);
 	win->_width = width;
 	win->_height = height;
 	glViewport(0, 0, width, height);
 }
 
-void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
+void antisocial::cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
 	Window* win = (Window*)glfwGetWindowUserPointer(window);
 	win->_x = xpos;
 	win->_y = ypos;
 }
 
-void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
+void antisocial::mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
 	Window* win = (Window*)glfwGetWindowUserPointer(window);
 	win->_buttons[button] = (action != GLFW_RELEASE);
 }
 
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+void antisocial::scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 	Window* win = (Window*)glfwGetWindowUserPointer(window);
 }
 
-void window_iconify_callback(GLFWwindow* window, int iconified) {
+void antisocial::window_iconify_callback(GLFWwindow* window, int iconified) {
 	Window* win = (Window*)glfwGetWindowUserPointer(window);
 
 	win->_minimized = iconified;
 }
 
-void error_callback(int error, const char* description) {
+void antisocial::error_callback(int error, const char* description) {
 	//TODO: Create a logging system that can log these errors for future reference
 	std::cerr << "ERROR::(" << error << ")::\n" << description << std::endl;
 }
