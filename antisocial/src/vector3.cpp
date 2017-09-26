@@ -27,6 +27,12 @@ float Vector3::dot_product(const Vector3& v) {
 	return (_x * v._x) + (_y * v._y) + (_z * v._z);
 }
 
+Vector3 Vector3::normalize()
+{
+	float length = magnitude();
+	return Vector3(_x / length, _y / length, _z / length);
+}
+
 Vector3 Vector3::add(const Vector3& v) {
 	return Vector3(_x + v._x, _y + v._y, _z + v._z);
 }

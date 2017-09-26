@@ -22,11 +22,13 @@ namespace antisocial {
 		Vector2 operator+(const Vector2& v);
 		Vector2 operator-(const Vector2& v);
 
+		
+
 		friend ostream& operator<<(ostream& os, const Vector2& v) {
 			return os << "(" << v._x << ", " << v._y << ")";
 		}
 
-	private:
+	public:
 		float _x = 0, _y = 0;
 
 	protected:
