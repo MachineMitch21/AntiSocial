@@ -30,6 +30,11 @@ Matrix4 Matrix4::identity()
 	return Matrix4(1.0f);
 }
 
+float* Matrix4::toArray()
+{
+	return _elements;
+}
+
 Matrix4& Matrix4::multiply(const Matrix4& other)
 {
 	for (int y = 0; y < 4; y++)
@@ -60,7 +65,7 @@ Matrix4& Matrix4::operator*=(const Matrix4& other)
 	return multiply(other);
 }
 
-Matrix4 antisocial::ortho(float left, float right, float bottom, float top, float near, float far)
+Matrix4 Matrix4::ortho(float left, float right, float bottom, float top, float near, float far)
 {
 	Matrix4 result(1.0f);
 
@@ -75,7 +80,7 @@ Matrix4 antisocial::ortho(float left, float right, float bottom, float top, floa
 	return result;
 }
 
-Matrix4 antisocial::perspective(float fov, float aspectRatio, float near, float far)
+Matrix4 Matrix4::perspective(float fov, float aspectRatio, float near, float far)
 {
 	Matrix4 result(1.0f);
 
@@ -93,7 +98,7 @@ Matrix4 antisocial::perspective(float fov, float aspectRatio, float near, float 
 	return result;
 }
 
-Matrix4 antisocial::lookAt(Vector3& camPos, Vector3& objPos, Vector3& up)
+Matrix4 Matrix4::lookAt(Vector3 camPos, Vector3 objPos, Vector3 up)
 {
 	Matrix4 result(1.0f);
 
@@ -115,55 +120,49 @@ Matrix4 antisocial::lookAt(Vector3& camPos, Vector3& objPos, Vector3& up)
 
 	Vector3 translationVec(-camPos._x, -camPos._y, -camPos._z);
 
-	result *= translate(translationVec);
+	result *= translate(result, translationVec);
 
 	return result;
 }
 
-Matrix4 antisocial::translate(Vector3& translation)
+Matrix4 Matrix4::translate(Matrix4& mat, Vector3 translation)
 {
-	Matrix4 result(1.0f);
+	mat._elements[0 + 3 * 4] = translation._x;
+	mat._elements[1 + 3 * 4] = translation._y;
+	mat._elements[2 + 3 * 4] = translation._z;
 
-	result._elements[0 + 3 * 4] = translation._x;
-	result._elements[1 + 3 * 4] = translation._y;
-	result._elements[2 + 3 * 4] = translation._z;
-
-	return result;
+	return mat;
 }
 
-Matrix4 antisocial::rotate(float angle, const Vector3& axis)
+Matrix4 Matrix4::rotate(Matrix4& mat, float angle, Vector3 axis)
 {
-	Matrix4 result(1.0f);
-
 	float r = radians(angle);
 	float c = cos(r);
 	float s = sin(r);
 	float omc = 1.0f - c;
 
-	result._elements[0 + 0 * 4] = axis._x * omc + c;
-	result._elements[1 + 0 * 4] = axis._y * axis._x * omc + axis._z * s;
-	result._elements[2 + 0 * 4] = axis._x * axis._z * omc - axis._y * s;
+	mat._elements[0 + 0 * 4] = axis._x * omc + c;
+	mat._elements[0 + 1 * 4] = axis._y * axis._x * omc + axis._z * s;
+	mat._elements[0 + 2 * 4] = axis._x * axis._z * omc - axis._y * s;
 
-	result._elements[0 + 1 * 4] = axis._x * axis._y * omc - axis._z * s;
-	result._elements[1 + 1 * 4] = axis._y * omc + c;
-	result._elements[2 + 1 * 4] = axis._y * axis._z * omc + axis._x * s;
+	mat._elements[1 + 0 * 4] = axis._x * axis._y * omc - axis._z * s;
+	mat._elements[1 + 1 * 4] = axis._y * omc + c;
+	mat._elements[1 + 2 * 4] = axis._y * axis._z * omc + axis._x * s;
 
-	result._elements[0 + 0 * 4] = axis._x * axis._z * omc + axis._y * s;
-	result._elements[1 + 0 * 4] = axis._y * axis._z * omc - axis._x * s;
-	result._elements[2 + 0 * 4] = axis._x * axis._z * omc + axis._x * s;
+	mat._elements[2 + 0 * 4] = axis._x * axis._z * omc + axis._y * s;
+	mat._elements[2 + 1 * 4] = axis._y * axis._z * omc - axis._x * s;
+	mat._elements[2 + 2 * 4] = axis._x * axis._z * omc + axis._x * s;
 
-	return result;
+	return mat;
 }
 
-Matrix4 antisocial::scale(const Vector3& scale)
+Matrix4 Matrix4::scale(Matrix4& mat, Vector3 scale)
 {
-	Matrix4 result(1.0f);
+	mat._elements[0 + 0 * 4] = scale._x;
+	mat._elements[1 + 1 * 4] = scale._y;
+	mat._elements[2 + 2 * 4] = scale._z;
 
-	result._elements[0 + 0 * 4] = scale._x;
-	result._elements[1 + 1 * 4] = scale._y;
-	result._elements[2 + 2 * 4] = scale._z;
-
-	return result;
+	return mat;
 }
 
 Matrix4::~Matrix4()

@@ -122,7 +122,7 @@ void Window::enableVSYNC(bool enable) {
 }
 
 void Window::update() {
-	glfwWaitEvents();
+	glfwPollEvents();
 	glfwSwapBuffers(_window);
 }
 

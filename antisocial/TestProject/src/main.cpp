@@ -1,7 +1,12 @@
 
 #include <Window.h>
 #include <Shader.h>
+#include <matrix4.h>
+#include <vector3.h>
 #include <string>
+
+using antisocial::Matrix4;
+using antisocial::Vector3;
 
 int main(int argc, char** argv)
 {
@@ -10,6 +15,9 @@ int main(int argc, char** argv)
 	w.setIcon("../../extras/antisocial_icon.png");
 	w.enableVSYNC(true);
 
+	Matrix4 projection; 
+	Matrix4 view = Matrix4::lookAt(Vector3(4,3,3), Vector3(0,0,0), Vector3(0,1,0));
+	
 	float vertices[]
 	{
 		 0.0f,  0.5f, 0.0f,
@@ -26,6 +34,15 @@ int main(int argc, char** argv)
 
 	while(!w.IsClosed())
 	{
+		Matrix4 model(1.0f);
+		model = Matrix4::translate(model, Vector3(0.25f, 0.25f, 0.0f));
+		model = Matrix4::rotate(model, (float)glfwGetTime() * 10, Vector3(0.0f, 0.0f, 1.0f));
+		
+		shader.bind();
+
+		GLuint transformLoc = glGetUniformLocation(shader.getProgram(), "transform");
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, model.toArray());
+		
 		if (w.isKeyPressed(GLFW_KEY_ESCAPE))
 		{
 			exit(0);
@@ -47,10 +64,12 @@ int main(int argc, char** argv)
 		glDrawArrays(GL_TRIANGLES, 0, 3); 
 		glBindVertexArray(0);
 
-		shader.bind();
 
 		w.update();
 	}
+
+	glDeleteVertexArrays(1, &vao);
+	glDeleteBuffers(1, &vbo);
 
 	return 0;
 }

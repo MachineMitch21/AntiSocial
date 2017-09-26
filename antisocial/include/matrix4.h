@@ -27,34 +27,28 @@ namespace antisocial {
 
 
 		static Matrix4 identity();
+
+		float* toArray();
+
 		Matrix4& multiply(const Matrix4& other);
 
-		friend Matrix4 ortho(float left, float right, float bottom, float top, float near, float far);
-		friend Matrix4 perspective(float fov, float apectRatio, float near, float far);
+		static Matrix4 ortho(float left, float right, float bottom, float top, float near, float far);
+		static Matrix4 perspective(float fov, float apectRatio, float near, float far);
 
-		friend Matrix4 lookAt(Vector3& viewPos, Vector3& objPos, Vector3& up);
+		static Matrix4 lookAt(Vector3 viewPos, Vector3 objPos, Vector3 up);
 
-		friend Matrix4 translate(Vector3& translation);
-		friend Matrix4 rotate(float angle, const Vector3& axis);
-		friend Matrix4 scale(const Vector3& scale);
+		static Matrix4 translate(Matrix4& mat, Vector3 translation);
+		static Matrix4 rotate(Matrix4& mat, float angle, Vector3 axis);
+		static Matrix4 scale(Matrix4& mat, Vector3 scale);
 
 		friend Matrix4 operator*(Matrix4 left, const Matrix4& right);
 		Matrix4& operator*=(const Matrix4& other);
 		
-	private:
+	public:
 		float _elements[16];
 	};
-	
-	Matrix4 ortho(float left, float right, float bottom, float top, float near, float far);
-	Matrix4 perspective(float fov, float apectRatio, float near, float far);
 
-	Matrix4 lookAt(Vector3& viewPos, Vector3& objPos, Vector3& up);
-
-	Matrix4 translate(Vector3& translation);
-	Matrix4 rotate(float angle, const Vector3& axis);
-	Matrix4 scale(const Vector3& scale);
-	Matrix4 operator*(Matrix4 left, Matrix4& right);
-
+	Matrix4 operator*(Matrix4 left, const Matrix4& right);
 }
 
 
