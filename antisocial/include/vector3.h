@@ -5,7 +5,7 @@
 
 using std::ostream;
 
-namespace as_math {
+namespace antisocial {
 
 	class Vector3
 	{
