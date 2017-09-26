@@ -128,7 +128,7 @@ void Window::update() {
 
 void Window::clear(float r, float g, float b, float a) {
 	glClearColor(r, g, b, a);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 Window::~Window()
@@ -140,7 +140,7 @@ bool Window::init() {
 	bool isInitialized = true;
 	GLenum status;
 
-	glEnable(GL_DEPTH_TEST | GL_STENCIL_TEST);
+	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
 	glfwInit();

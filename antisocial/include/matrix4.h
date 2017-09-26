@@ -28,8 +28,6 @@ namespace antisocial {
 
 		static Matrix4 identity();
 
-		float* toArray();
-
 		Matrix4& multiply(const Matrix4& other);
 
 		static Matrix4 ortho(float left, float right, float bottom, float top, float near, float far);
