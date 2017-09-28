@@ -30,6 +30,7 @@ namespace antisocial {
 		static Matrix4 identity();
 
 		Matrix4& multiply(const Matrix4& other);
+		void toString();
 
 		static Matrix4 ortho(float left, float right, float bottom, float top, float near, float far);
 		static Matrix4 perspective(float fov, float apectRatio, float near, float far);

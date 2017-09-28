@@ -94,16 +94,19 @@ int main(int argc, char** argv)
 
 		w.clear(.25f, .5f, .75f, 1.0f);
 
-//		Matrix4 view;
-//		Matrix4 projection;
+//   	Matrix4 v;
+		Matrix4 proj;
 //		Matrix4 model;
 //
-//		projection = Matrix4::perspective(antisocial::radians(45.0f), (float)w.getWidth() / (float)w.getHeight(), 0.1f, 100.0f);
+		proj = Matrix4::perspective(antisocial::radians(45.0f), (float)w.getWidth() / (float)w.getHeight(), 0.1f, 100.0f);
 //
 //		view = Matrix4::translate(view, Vector3(0.0f, 0.0f, 0.0f));
 
 //		model = Matrix4::translate(model, Vector3(0.0f, 0.0f, -5.0f));
 //		model = Matrix4::rotate(model, antisocial::radians((float)glfwGetTime() * 5), Vector3(0.0f, 1.0f, 1.0f));
+
+		std::cout << "--Printing Matrix4--" << std::endl;
+		proj.toString();
 
 		shader.bind();
 
@@ -112,6 +115,18 @@ int main(int argc, char** argv)
 		glm::mat4 model;
 
 		projection = glm::perspective(glm::radians(45.0f), (float)w.getWidth() / (float)w.getHeight(), 0.1f, 100.0f);
+
+		float arr[16] = {0.0f};
+
+		const float* matVals = (const float*)glm::value_ptr(projection);
+		for (int i = 0; i < 16; i++)
+		{	
+			arr[i] = matVals[i];
+			std::cout << arr[i] << ", ";
+
+			if (i == 3 || i == 7 || i == 11 || i == 15)
+				std::cout << std::endl;
+		}
 
 		view = glm::translate(view, glm::vec3(0.0f, 0.0f, 0.0f));
 

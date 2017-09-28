@@ -1,6 +1,8 @@
 
 #include "matrix4.h"
 
+#include <iostream>
+
 using antisocial::Matrix4;
 
 
@@ -50,6 +52,14 @@ Matrix4& Matrix4::multiply(const Matrix4& other)
 	return *this;
 }
 
+void Matrix4::toString()
+{
+	std::cout << _elements[0] << ", " << _elements[1] << ", " << _elements[2] << ", " << _elements[3] << std::endl;
+	std::cout << _elements[4] << ", " << _elements[5] << ", " << _elements[6] << ", " << _elements[7] << std::endl;
+	std::cout << _elements[8] << ", " << _elements[9] << ", " << _elements[10] << ", " << _elements[11] << std::endl;
+	std::cout << _elements[12] << ", " << _elements[13] << ", " << _elements[14] << ", " << _elements[15] << std::endl;
+}
+
 Matrix4 antisocial::operator*(Matrix4 left, const Matrix4& right)
 {
 	return left.multiply(right);
@@ -79,27 +89,28 @@ Matrix4 Matrix4::perspective(float fov, float aspectRatio, float near, float far
 {
 	Matrix4 result(1.0f);
 
-//	float f_n = 1.0f / (far - near);
-//    	float theta = antisocial::radians(fov) * 0.5f;
-//	float divisor = tan(theta);
-//	float factor = 1.0f / divisor;
+	float f_n = 1.0f / (far - near);
+  	float theta = antisocial::radians(fov) * 0.5f;
+	float divisor = tan(theta);
+	float factor = 1.0f / divisor;
 
-//	result._elements[0] = (1.0f / aspectRatio) * factor;
-//	result._elements[5] = factor;
-//	result._elements[10] = (-(far + near)) * f_n;
-//	result._elements[11] = -1.0f;
-//	result._elements[14] = -2.0f * far * near * f_n;
+	result._elements[0] = 1.0f / (aspectRatio * factor);
+	result._elements[5] = factor;
+	result._elements[10] = (-(far + near)) * f_n;
+	result._elements[11] = -2.0f * far * near * f_n;
+	result._elements[14] = -1.0f;
+	result._elements[15] = 0.0f;
 
-	float q = 1.0f / tan(antisocial::radians(fov / 2.0f));
-	float a = 1.0f / (aspectRatio * tan(antisocial::radians(fov / 2.0f)));
-	float b = -((near + far) / (near - far));
-	float c = -((2.0f * near * far) / (near - far));
+//	float q = 1.0f / tan(antisocial::radians(fov / 2.0f));
+//	float a = 1.0f / (aspectRatio * tan(antisocial::radians(fov / 2.0f)));
+//	float b = -((near + far) / (near - far));
+//	float c = -((2.0f * near * far) / (near - far));
 
-	result._elements[0 + 0 * 4] = a;
-	result._elements[1 + 1 * 4] = q;
-	result._elements[2 + 2 * 4] = b;
-	result._elements[2 + 3 * 4] = -1.0f;
-	result._elements[3 + 2 * 4] = c;
+//	result._elements[0 + 0 * 4] = a;
+//	result._elements[1 + 1 * 4] = q;
+//	result._elements[2 + 2 * 4] = b;
+//	result._elements[2 + 3 * 4] = -1.0f;
+//	result._elements[3 + 2 * 4] = c;
 
 	return result;
 }
