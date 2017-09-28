@@ -20,19 +20,25 @@ namespace antisocial {
 		void bind();
 		GLuint& getProgram();
 
+		void setMatrix4(const std::string& name, const float* v);
+		void setVector2(const std::string& name, float v1, float v2);
+		void setVector3(const std::string& name, float v1, float v2, float v3);
+		void setVector4(const std::string& name, float v1, float v2, float v3, float v4);
+		void setFloat(const std::string& name, float v);
+		void setBool(const std::string& name, bool v);
+		void setInteger(const std::string& name, int v);
+		void setUInteger(const std::string& name, unsigned int v);
+
 	private:
 		void link_program();
 		GLuint compile_shader(const std::string& shader_src, GLenum shader_type);
 		std::string load_shader(const std::string& filename);
 
 	private:
-		GLuint m_shaders[MAX_SHADERS];
-		GLuint m_program;
-		GLint success;
-		GLchar err_log[ERR_LOG];
+		GLuint _shaders[MAX_SHADERS];
+		GLuint _handle;
+		GLint _success;
+		GLchar _errLog[ERR_LOG];
 	};
 
 }
-
-
-

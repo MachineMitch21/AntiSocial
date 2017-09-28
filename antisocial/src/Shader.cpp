@@ -1,13 +1,13 @@
-#include "Shader.h"
+#include <Shader.h>
 
 using antisocial::Shader;
 
 Shader::Shader(std::string* files, GLenum* types)
 {
-	m_program = glCreateProgram();
+	_handle = glCreateProgram();
 
 	for (int i = 0; i < MAX_SHADERS; i++) {
-		m_shaders[i] = compile_shader(load_shader(files[i]), types[i]);
+		_shaders[i] = compile_shader(load_shader(files[i]), types[i]);
 	}
 
 	link_program();
@@ -15,30 +15,79 @@ Shader::Shader(std::string* files, GLenum* types)
 
 void Shader::bind() {
 	glActiveTexture(GL_TEXTURE0);
-	glUseProgram(m_program);
+	glUseProgram(_handle);
+}
+
+void Shader::setMatrix4(const std::string& name, const float* v)
+{
+	GLuint uniformLocation = glGetUniformLocation(_handle, name.c_str());
+	glUniformMatrix4fv(uniformLocation, 1, GL_TRUE, v);
+}
+
+void Shader::setVector2(const std::string& name, float v1, float v2)
+{
+	GLuint uniformLocation = glGetUniformLocation(_handle, name.c_str());
+	glUniform2f(uniformLocation, v1, v2);
+}
+
+void Shader::setVector3(const std::string& name, float v1, float v2, float v3)
+{
+	GLuint uniformLocation = glGetUniformLocation(_handle, name.c_str());
+	glUniform3f(uniformLocation, v1, v2, v3);
+}
+
+void Shader::setVector4(const std::string& name, float v1, float v2, float v3, float v4)
+{
+	GLuint uniformLocation = glGetUniformLocation(_handle, name.c_str());
+	glUniform4f(uniformLocation, v1, v2, v3, v4);
+}
+
+void Shader::setFloat(const std::string& name, float v)
+{
+	GLuint uniformLocation = glGetUniformLocation(_handle, name.c_str());
+	glUniform1f(uniformLocation, v);
+}
+
+void Shader::setBool(const std::string& name, bool v)
+{
+	GLuint uniformLocation = glGetUniformLocation(_handle, name.c_str());
+	glUniform1i(uniformLocation, v);
+}
+
+void Shader::setInteger(const std::string& name, int v)
+{
+	GLuint uniformLocation = glGetUniformLocation(_handle, name.c_str());
+	glUniform1i(uniformLocation, v);
+}
+
+void Shader::setUInteger(const std::string& name, unsigned int v)
+{
+	GLuint uniformLocation = glGetUniformLocation(_handle, name.c_str());
+	glUniform1ui(uniformLocation, v);
 }
 
 GLuint& Shader::getProgram() {
-	return m_program;
+	return _handle;
 }
 
 void Shader::link_program() {
 
 	//Attach shaders to newly create program and then link everything
 	for (int i = 0; i < MAX_SHADERS; i++) {
-		glAttachShader(m_program, m_shaders[i]);
+		glAttachShader(_handle, _shaders[i]);
 	}
 
-	glBindAttribLocation(m_program, 0, "position");
-	glBindAttribLocation(m_program, 1, "color");
+	glBindAttribLocation(_handle, 0, "Pos");
+	glBindAttribLocation(_handle, 1, "Color");
+	glBindAttribLocation(_handle, 2, "TexCoord");
 
-	glLinkProgram(m_program);
+	glLinkProgram(_handle);
 
-	glGetProgramiv(m_program, GL_LINK_STATUS, &success);
+	glGetProgramiv(_handle, GL_LINK_STATUS, &_success);
 
-	if (!success) {
-		glGetProgramInfoLog(m_program, ERR_LOG, NULL, err_log);
-		std::cout << "ERROR linking shader program:: " << m_program << " ::\n" << err_log << std::endl;
+	if (!_success) {
+		glGetProgramInfoLog(_handle, ERR_LOG, NULL, _errLog);
+		std::cout << "ERROR linking shader program:: " << _handle << " ::\n" << _errLog << std::endl;
 	}
 }
 
@@ -57,12 +106,12 @@ GLuint Shader::compile_shader(const std::string& shader_src, GLenum shader_type)
 	glCompileShader(shader);
 
 	//Check for compilation errors
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &_success);
 
 	//If compilation had errors
-	if (!success) {
-		glGetShaderInfoLog(shader, ERR_LOG, NULL, err_log);
-		std::cout << "Error compiling shader::- " << shader << " -::\n" << err_log << std::endl;
+	if (!_success) {
+		glGetShaderInfoLog(shader, ERR_LOG, NULL, _errLog);
+		std::cout << "Error compiling shader::- " << shader << " -::\n" << _errLog << std::endl;
 	}
 
 	return shader;
@@ -90,6 +139,6 @@ std::string Shader::load_shader(const std::string& filename){
 Shader::~Shader()
 {
 	for (int i = 0; i < MAX_SHADERS; i++) {
-		glDeleteShader(m_shaders[i]);
+		glDeleteShader(_shaders[i]);
 	}
 }
