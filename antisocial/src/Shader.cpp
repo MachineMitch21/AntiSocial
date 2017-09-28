@@ -30,6 +30,7 @@ void Shader::link_program() {
 	}
 
 	glBindAttribLocation(m_program, 0, "position");
+	glBindAttribLocation(m_program, 1, "color");
 
 	glLinkProgram(m_program);
 

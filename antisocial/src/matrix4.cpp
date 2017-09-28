@@ -10,8 +10,6 @@ Matrix4::Matrix4()
 	{
 		_elements[i] = 0.0f;
 	}
-	
-	std::cout << "Created a matrix" << std::endl;
 }
 
 Matrix4::Matrix4(float diagonal)
@@ -25,8 +23,6 @@ Matrix4::Matrix4(float diagonal)
 	_elements[1 + 1 * 4] = diagonal;
 	_elements[2 + 2 * 4] = diagonal;
 	_elements[3 + 3 * 4] = diagonal;
-
-	std::cout << "Created a matrix" << std::endl;
 }
 
 Matrix4 Matrix4::identity()
@@ -104,7 +100,7 @@ Matrix4 Matrix4::perspective(float fov, float aspectRatio, float near, float far
 	result._elements[2 + 2 * 4] = b;
 	result._elements[2 + 3 * 4] = -1.0f;
 	result._elements[3 + 2 * 4] = c;
-	
+
 	return result;
 }
 

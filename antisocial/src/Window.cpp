@@ -82,10 +82,9 @@ void Window::setCursor(CURSOR_MODE mode) {
 void Window::setIcon(const std::string path) {
 
 #ifndef __APPLE__
-
 	if (path != "") {
 		int width, height, numComponents;
-		
+
 		GLFWimage icon[1];
 
 		icon[0].pixels = stbi_load(path.c_str(), &width, &height, &numComponents, 4);
@@ -94,16 +93,14 @@ void Window::setIcon(const std::string path) {
 			std::cerr << "Failed to load icon image" << std::endl;
 			return;
 		}
-		
+
 		glfwSetWindowIcon(_window, 1, icon);
 
 		stbi_image_free(icon[0].pixels);
-			
 	}
 	else {
 		glfwSetWindowIcon(_window, 0, NULL);
 	}
-
 #else
 	std::cout << "Icon cannot be set on OS X" << std::endl;
 #endif // __APPLE__
@@ -141,12 +138,9 @@ bool Window::init() {
 	bool isInitialized = true;
 	GLenum status;
 
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
-
 	glfwInit();
 
-	std::cout << "Using GLFW VERSION: " << glfwGetVersionString() << std::endl;	
+	std::cout << "Using GLFW VERSION: " << glfwGetVersionString() << std::endl;
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
@@ -174,8 +168,6 @@ bool Window::init() {
 	}
 
 	glfwMakeContextCurrent(_window);
-	glViewport(0, 0, _width, _height);
-
 	glewExperimental = GL_TRUE;
 
 	status = glewInit();
@@ -184,6 +176,11 @@ bool Window::init() {
 		std::cerr << "Failed to initialize GLEW" << std::endl;
 		isInitialized = false;
 	}
+
+	glViewport(0, 0, _width, _height);
+
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
 
 	glfwGetFramebufferSize(_window, &_width, &_height);
 	glfwSetWindowUserPointer(_window, this);
@@ -195,7 +192,7 @@ bool Window::init() {
 	glfwSetScrollCallback(_window, scroll_callback);
 	glfwSetWindowIconifyCallback(_window, window_iconify_callback);
 	glfwSetErrorCallback(error_callback);
-	
+
 	return isInitialized;
 }
 
@@ -238,4 +235,3 @@ void antisocial::error_callback(int error, const char* description) {
 	//TODO: Create a logging system that can log these errors for future reference
 	std::cerr << "ERROR::(" << error << ")::\n" << description << std::endl;
 }
-
