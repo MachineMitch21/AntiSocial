@@ -137,6 +137,7 @@ Window::~Window()
 }
 
 bool Window::init() {
+
 	bool isInitialized = true;
 	GLenum status;
 
@@ -150,7 +151,11 @@ bool Window::init() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	#ifdef __APPLE__
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	#endif
+
 	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
 	//TODO: Setup fullscreen to non-fullscreen modes...

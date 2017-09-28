@@ -25,7 +25,8 @@ namespace antisocial {
 
 		~Matrix4();
 
-
+		inline const float* getElements() const { return _elements; }
+		
 		static Matrix4 identity();
 
 		Matrix4& multiply(const Matrix4& other);

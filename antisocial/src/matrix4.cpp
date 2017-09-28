@@ -10,6 +10,8 @@ Matrix4::Matrix4()
 	{
 		_elements[i] = 0.0f;
 	}
+	
+	std::cout << "Created a matrix" << std::endl;
 }
 
 Matrix4::Matrix4(float diagonal)
@@ -23,6 +25,8 @@ Matrix4::Matrix4(float diagonal)
 	_elements[1 + 1 * 4] = diagonal;
 	_elements[2 + 2 * 4] = diagonal;
 	_elements[3 + 3 * 4] = diagonal;
+
+	std::cout << "Created a matrix" << std::endl;
 }
 
 Matrix4 Matrix4::identity()
@@ -40,7 +44,7 @@ Matrix4& Matrix4::multiply(const Matrix4& other)
 
 			for (int i = 0; i < 4; i++)
 			{
-				sum += _elements[x + i * 4] * other._elements[i + y * 4];
+				sum += _elements[i + x * 4] * other._elements[y + i * 4];
 			}
 
 			_elements[x + y * 4] = sum;
@@ -68,9 +72,9 @@ Matrix4 Matrix4::ortho(float left, float right, float bottom, float top, float n
 	result._elements[1 + 1 * 4] = 2.0f / (top - bottom);
 	result._elements[2 + 2 * 4] = 2.0f / (near - far);
 
-	result._elements[0 + 3 * 4] = 2.0f / (left + right) / (left - right);
-	result._elements[1 + 3 * 4] = 2.0f / (bottom + top) / (bottom - top);
-	result._elements[2 + 3 * 4] = 2.0f / (far + near) / (far - near);
+	result._elements[3 + 0 * 4] = 2.0f / (left + right) / (left - right);
+	result._elements[3 + 1 * 4] = 2.0f / (bottom + top) / (bottom - top);
+	result._elements[3 + 2 * 4] = 2.0f / (far + near) / (far - near);
 
 	return result;
 }
@@ -79,17 +83,28 @@ Matrix4 Matrix4::perspective(float fov, float aspectRatio, float near, float far
 {
 	Matrix4 result(1.0f);
 
-	float f_n = 1.0f / (far - near);
-    float theta = antisocial::radians(fov) * 0.5f;
-	float divisor = tan(theta);
-	float factor = 1.0f / divisor;
+//	float f_n = 1.0f / (far - near);
+//    	float theta = antisocial::radians(fov) * 0.5f;
+//	float divisor = tan(theta);
+//	float factor = 1.0f / divisor;
 
-	result._elements[0] = (1.0f / aspectRatio) * factor;
-	result._elements[5] = factor;
-	result._elements[10] = (-(far + near)) * f_n;
-	result._elements[11] = -1.0f;
-	result._elements[14] = -2.0f * far * near * f_n;
+//	result._elements[0] = (1.0f / aspectRatio) * factor;
+//	result._elements[5] = factor;
+//	result._elements[10] = (-(far + near)) * f_n;
+//	result._elements[11] = -1.0f;
+//	result._elements[14] = -2.0f * far * near * f_n;
 
+	float q = 1.0f / tan(antisocial::radians(fov / 2.0f));
+	float a = 1.0f / (aspectRatio * tan(antisocial::radians(fov / 2.0f)));
+	float b = -((near + far) / (near - far));
+	float c = -((2.0f * near * far) / (near - far));
+
+	result._elements[0 + 0 * 4] = a;
+	result._elements[1 + 1 * 4] = q;
+	result._elements[2 + 2 * 4] = b;
+	result._elements[2 + 3 * 4] = -1.0f;
+	result._elements[3 + 2 * 4] = c;
+	
 	return result;
 }
 
@@ -122,9 +137,9 @@ Matrix4 Matrix4::lookAt(Vector3 camPos, Vector3 objPos, Vector3 up)
 
 Matrix4 Matrix4::translate(Matrix4& mat, Vector3 translation)
 {
-	mat._elements[0 + 3 * 4] = translation._x;
-	mat._elements[1 + 3 * 4] = translation._y;
-	mat._elements[2 + 3 * 4] = translation._z;
+	mat._elements[3 + 0 * 4] = translation._x;
+	mat._elements[3 + 1 * 4] = translation._y;
+	mat._elements[3 + 2 * 4] = translation._z;
 
 	return mat;
 }
@@ -137,15 +152,15 @@ Matrix4 Matrix4::rotate(Matrix4& mat, float angle, Vector3 axis)
 	float omc = 1.0f - c;
 
 	mat._elements[0 + 0 * 4] = axis._x * axis._x * omc + c;
-	mat._elements[1 + 0 * 4] = axis._y * axis._x * omc + axis._z * s;
-	mat._elements[2 + 0 * 4] = axis._x * axis._z * omc - axis._y * s;
+	mat._elements[0 + 1 * 4] = axis._y * axis._x * omc + axis._z * s;
+	mat._elements[0 + 2 * 4] = axis._x * axis._z * omc - axis._y * s;
 
-	mat._elements[0 + 1 * 4] = axis._x * axis._y * omc - axis._z * s;
+	mat._elements[1 + 0 * 4] = axis._x * axis._y * omc - axis._z * s;
 	mat._elements[1 + 1 * 4] = axis._y * axis._y * omc + c;
-	mat._elements[2 + 1 * 4] = axis._y * axis._z * omc + axis._x * s;
+	mat._elements[1 + 2 * 4] = axis._y * axis._z * omc + axis._x * s;
 
-	mat._elements[0 + 2 * 4] = axis._x * axis._z * omc + axis._y * s;
-	mat._elements[1 + 2 * 4] = axis._y * axis._z * omc - axis._x * s;
+	mat._elements[2 + 0 * 4] = axis._x * axis._z * omc + axis._y * s;
+	mat._elements[2 + 1 * 4] = axis._y * axis._z * omc - axis._x * s;
 	mat._elements[2 + 2 * 4] = axis._x * axis._z * omc + c;
 
 	return mat;
