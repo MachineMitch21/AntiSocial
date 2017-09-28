@@ -115,19 +115,22 @@ int main(int argc, char** argv)
 			std::string texStr;
 
 			texChangeTimer = 0.0f;
-			if (texChoice > 2) texChoice = 0;
+			if (texChoice > 3) texChoice = 0;
 
 			std::cout << texChoice << std::endl;
 
 			switch (texChoice) {
 				case 0:
-					texStr = "../../extras/bricks.jpg";
+					texStr = "../../extras/jim-carrey.png";
 					break;
 				case 1:
 					texStr = "../../extras/index.png";
 					break;
 				case 2:
 					texStr = "../../extras/troll.png";
+					break;
+				case 3:
+					texStr = "../../extras/antisocial_icon.png";
 					break;
 			}
 
