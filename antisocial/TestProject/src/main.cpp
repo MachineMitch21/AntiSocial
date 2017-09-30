@@ -71,16 +71,16 @@ int main(int argc, char** argv)
 
 	glm::vec3 positions[10]
 	{
-		glm::vec3(1.0f, 2.0f, -4.5f),
-		glm::vec3(-1.0f,-2.0f, -8.0f),
-		glm::vec3(2.5f, 2.0f, -3.5f),
-		glm::vec3(0.0f, 3.0f, -12.5f),
-		glm::vec3(2.0f, 0.0f, -20.0f),
-		glm::vec3(-2.0f, 1.0f, -15.0f),
-		glm::vec3(2.0f, -2.0f, -1.5f),
-		glm::vec3(2.0f, -2.0f, -6.0f),
-		glm::vec3(-2.0f, 0.0f, -5.0f),
-		glm::vec3(1.6f, -1.5f, -3.0f)
+		glm::vec3(-2.5f,-2.0f, 0.0f),
+		glm::vec3(-1.0f,-2.0f, 0.0f),
+		glm::vec3( 1.0f,-2.0f, 0.0f),
+		glm::vec3( 2.5f,-2.0f, 0.0f),
+		glm::vec3(-1.5f,-1.0f, 0.0f),
+		glm::vec3( 0.0f,-1.0f, 0.0f),
+		glm::vec3( 1.5f,-1.0f, 0.0f),
+		glm::vec3(-1.0f, 0.0f, 0.0f),
+		glm::vec3( 1.0f, 0.0f, 0.0f),
+		glm::vec3( 0.0f, 1.0f, 0.0f)
 	};
 
 	std::string srcs[2] = { "../../shaders/shader.vert", "../../shaders/shader.frag" };
@@ -182,7 +182,7 @@ int main(int argc, char** argv)
 		//glm::mat4 model;
 
 		projection = glm::perspective(glm::radians(45.0f), (float)w.getWidth() / (float)w.getHeight(), 0.1f, 100.0f);
-		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f));
+		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
 
 		//DEBUG CODE FOR GLM::MAT4
 		/*
@@ -203,15 +203,19 @@ int main(int argc, char** argv)
 		shader.setMatrix4("view", /*view._elements*/glm::value_ptr(view));
 		shader.setMatrix4("projection", /*projection._elements*/glm::value_ptr(projection));
 
-		for (int i = 0; i < 10; i++)
+		float zPos = 0.0f;
+		int zCounter = 0;
+
+		for (int i = 0; i < 10000; i++)
 		{
+			positions[zCounter].z = zPos;
 			glm::mat4 model;
-			model = glm::translate(model, positions[i]);
+			model = glm::translate(model, positions[zCounter]);
 			model = glm::rotate(model, currentFrame * 2.0f, glm::vec3(0, 1.0f, 1.0f));
 
 			shader.setMatrix4("model", /*model._elements*/glm::value_ptr(model));
 
-			if (i < 5)
+			if (zCounter < 5)
 				texture.bind(0);
 			else
 				overridingTexture.bind(0);
@@ -219,6 +223,13 @@ int main(int argc, char** argv)
 			glBindVertexArray(vao);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 			glBindVertexArray(0);
+
+			if (zCounter >= 9)
+			{
+				zCounter = 0;
+				zPos -= 2.0f;
+			}
+			zCounter++;
 		}
 
 		w.update();
