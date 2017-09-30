@@ -25,6 +25,7 @@ public:
     ~Camera();
 
     void setFOV(float fov);
+    void setAspectRatio(float aspectRatio);
     void setNearClip(float nearClip);
     void setFarClip(float farClip);
 

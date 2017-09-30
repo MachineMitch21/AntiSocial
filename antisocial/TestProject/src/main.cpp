@@ -68,6 +68,20 @@ int main(int argc, char** argv)
         -0.5f,  0.5f, -0.5f, 1.0f, 0.5f, 0.0f, 0.0f, 0.0f
 	};
 
+	glm::vec3 positions[10]
+	{
+		glm::vec3(1.0f, 2.0f, -4.5f),
+		glm::vec3(-1.0f,-2.0f, -8.0f),
+		glm::vec3(2.5f, 2.0f, -3.5f),
+		glm::vec3(0.0f, 3.0f, -12.5f),
+		glm::vec3(2.0f, 0.0f, -20.0f),
+		glm::vec3(-2.0f, 1.0f, -15.0f),
+		glm::vec3(2.0f, -2.0f, -1.5f),
+		glm::vec3(2.0f, -2.0f, -6.0f),
+		glm::vec3(-2.0f, 0.0f, -5.0f),
+		glm::vec3(1.6f, -1.5f, -3.0f)
+	};
+
 	std::string srcs[2] = { "../../shaders/shader.vert", "../../shaders/shader.frag" };
 	GLenum types[2] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
 
@@ -83,14 +97,16 @@ int main(int argc, char** argv)
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+
+	glBindVertexArray(0);
 
 	shader.bind();
 	shader.setInteger("tex", 0);
@@ -166,13 +182,10 @@ int main(int argc, char** argv)
 
 		glm::mat4 view;
 		glm::mat4 projection;
-		glm::mat4 model;
+		//glm::mat4 model;
 
 		projection = glm::perspective(glm::radians(45.0f), (float)w.getWidth() / (float)w.getHeight(), 0.1f, 100.0f);
-		view = glm::translate(view, glm::vec3(0.0f, 0.0f, 0.0f));
-
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
-		model = glm::rotate(model, glm::radians((float)glfwGetTime() * 25), glm::vec3(0.0f, 1.0f, 1.0f));
+		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f));
 
 		//DEBUG CODE FOR GLM::MAT4
 		/*
@@ -189,14 +202,21 @@ int main(int argc, char** argv)
 		}
 		*/
 
-
-		shader.setMatrix4("model", /*model._elements*/glm::value_ptr(model));
 		shader.setMatrix4("view", /*view._elements*/glm::value_ptr(view));
 		shader.setMatrix4("projection", /*projection._elements*/glm::value_ptr(projection));
 
-		glBindVertexArray(vao);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		glBindVertexArray(0);
+		for (int i = 0; i < 10; i++)
+		{
+			glm::mat4 model;
+			model = glm::translate(model, positions[i]);
+			model = glm::rotate(model, currentFrame * 2.0f, glm::vec3(0, 1.0f, 1.0f));
+
+			shader.setMatrix4("model", /*model._elements*/glm::value_ptr(model));
+
+			glBindVertexArray(vao);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+			glBindVertexArray(0);
+		}
 
 		w.update();
 	}
