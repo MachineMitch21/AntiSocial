@@ -198,6 +198,7 @@ int main(int argc, char** argv)
 				std::cout << std::endl;
 		}
 		*/
+		shader.bind();
 
 		shader.setMatrix4("view", /*view._elements*/glm::value_ptr(view));
 		shader.setMatrix4("projection", /*projection._elements*/glm::value_ptr(projection));
@@ -214,8 +215,6 @@ int main(int argc, char** argv)
 				texture.bind(0);
 			else
 				overridingTexture.bind(0);
-
-			shader.bind();
 
 			glBindVertexArray(vao);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
