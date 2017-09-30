@@ -19,6 +19,7 @@ int main(int argc, char** argv)
 	antisocial::Window w("USING ANTISOCIAL LIB", 800, 600);
 
 	Texture2D texture("../../extras/bricks.jpg");
+	Texture2D overridingTexture("../../extras/bricks.jpg");
 
 	w.setIcon("../../extras/antisocial_icon.png");
 	w.enableVSYNC(true);
@@ -176,10 +177,6 @@ int main(int argc, char** argv)
 //		std::cout << "--Printing Matrix4--" << std::endl;
 //		proj.toString();
 
-		texture.bind(0);
-		shader.bind();
-
-
 		glm::mat4 view;
 		glm::mat4 projection;
 		//glm::mat4 model;
@@ -212,6 +209,13 @@ int main(int argc, char** argv)
 			model = glm::rotate(model, currentFrame * 2.0f, glm::vec3(0, 1.0f, 1.0f));
 
 			shader.setMatrix4("model", /*model._elements*/glm::value_ptr(model));
+
+			if (i < 5)
+				texture.bind(0);
+			else
+				overridingTexture.bind(0);
+
+			shader.bind();
 
 			glBindVertexArray(vao);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
