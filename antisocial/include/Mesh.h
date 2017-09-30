@@ -4,12 +4,18 @@
 
 #include <Drawable.h>
 
-class Mesh : public Drawable
+namespace antisocial
 {
-public:
 
-private:
-    
-};
+    class Mesh : public Drawable
+    {
+    public:
+
+    private:
+
+    };
+
+}
+
 
 #endif // __MESH_H__
