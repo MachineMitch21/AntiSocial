@@ -107,11 +107,6 @@ int main(int argc, char** argv)
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
-	//glBindVertexArray(0);
-
-	shader.bind();
-	//shader.setInteger("tex", 0);
-
 	float 	currentFrame = 0.0f,
 			deltaTime = 0.0f,
 			lastFrame = 0.0f;
@@ -122,8 +117,24 @@ int main(int argc, char** argv)
 	float lastTimeCount = glfwGetTime();
 	int nbFrames = 0;
 
+	glm::mat4 view;
+	glm::mat4 projection;
+
+	projection = glm::perspective(glm::radians(45.0f), (float)w.getWidth() / (float)w.getHeight(), 0.1f, 1000.0f);
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
+
+	shader.bind();
+
+	shader.setMatrix4("view", /*view._elements*/glm::value_ptr(view));
+	shader.setMatrix4("projection", /*projection._elements*/glm::value_ptr(projection));
+
 	while(!w.IsClosed())
 	{
+		if (w.isKeyPressed(GLFW_KEY_ESCAPE))
+		{
+			break;
+		}
+
 		currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
@@ -167,10 +178,6 @@ int main(int argc, char** argv)
 			texture.setImage(texStr);
 		}
 
-		if (w.isKeyPressed(GLFW_KEY_ESCAPE))
-		{
-			break;
-		}
 
 		w.clear(.25f, .5f, .75f, 1.0f);
 
@@ -188,12 +195,6 @@ int main(int argc, char** argv)
 //		std::cout << "--Printing Matrix4--" << std::endl;
 //		proj.toString();
 
-		glm::mat4 view;
-		glm::mat4 projection;
-		//glm::mat4 model;
-
-		projection = glm::perspective(glm::radians(45.0f), (float)w.getWidth() / (float)w.getHeight(), 0.1f, 100.0f);
-		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
 
 		//DEBUG CODE FOR GLM::MAT4
 		// float arr[16] = {0.0f};
@@ -207,11 +208,6 @@ int main(int argc, char** argv)
 		// 	if (i == 3 || i == 7 || i == 11 || i == 15)
 		// 		std::cout << std::endl;
 		// }
-
-		shader.bind();
-
-		shader.setMatrix4("view", /*view._elements*/glm::value_ptr(view));
-		shader.setMatrix4("projection", /*projection._elements*/glm::value_ptr(projection));
 
 		float zPos = 0.0f;
 		int zCounter = 0;
@@ -230,15 +226,13 @@ int main(int argc, char** argv)
 			else
 				overridingTexture.bind(0);
 
-			//glBindVertexArray(vao);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
-			//glBindVertexArray(0);
 
 			zCounter++;
 			if (zCounter > 9)
 			{
 				zCounter = 0;
-				zPos -= 2.0f;
+				zPos -= 5.0f;
 			}
 		}
 
