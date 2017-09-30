@@ -224,12 +224,12 @@ int main(int argc, char** argv)
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 			glBindVertexArray(0);
 
-			if (zCounter >= 9)
+			zCounter++;
+			if (zCounter > 9)
 			{
 				zCounter = 0;
 				zPos -= 2.0f;
 			}
-			zCounter++;
 		}
 
 		w.update();
