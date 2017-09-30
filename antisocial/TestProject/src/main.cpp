@@ -110,7 +110,7 @@ int main(int argc, char** argv)
 	//glBindVertexArray(0);
 
 	shader.bind();
-	shader.setInteger("tex", 0);
+	//shader.setInteger("tex", 0);
 
 	float 	currentFrame = 0.0f,
 			deltaTime = 0.0f,
@@ -169,7 +169,7 @@ int main(int argc, char** argv)
 
 		if (w.isKeyPressed(GLFW_KEY_ESCAPE))
 		{
-			exit(0);
+			break;
 		}
 
 		w.clear(.25f, .5f, .75f, 1.0f);
@@ -216,7 +216,7 @@ int main(int argc, char** argv)
 		float zPos = 0.0f;
 		int zCounter = 0;
 
-		for (int i = 0; i < 15000; i++)
+		for (int i = 0; i < 10000; i++)
 		{
 			positions[zCounter].z = zPos;
 			glm::mat4 model;
