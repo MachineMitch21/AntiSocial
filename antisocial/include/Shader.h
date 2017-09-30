@@ -15,6 +15,7 @@ namespace antisocial {
 	{
 	public:
 		Shader(std::string* files, GLenum* types);
+		Shader();
 		~Shader();
 
 		void bind();

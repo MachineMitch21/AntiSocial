@@ -107,7 +107,7 @@ int main(int argc, char** argv)
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
-	glBindVertexArray(0);
+	//glBindVertexArray(0);
 
 	shader.bind();
 	shader.setInteger("tex", 0);
@@ -119,11 +119,24 @@ int main(int argc, char** argv)
 	float texChangeTimer = 0.0f;
 	int texChoice = 0;
 
+	float lastTimeCount = glfwGetTime();
+	int nbFrames = 0;
+
 	while(!w.IsClosed())
 	{
 		currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
+
+		nbFrames++;
+		if (currentFrame - lastTimeCount >= 1.0f)
+		{
+			std::cout << "Milliseconds: " << 1000.0f / nbFrames << std::endl;
+			std::cout << "Frames Per Second: " << nbFrames << std::endl;
+
+			nbFrames = 0;
+			lastTimeCount += 1.0f;
+		}
 
 		texChangeTimer += deltaTime;
 
@@ -133,8 +146,6 @@ int main(int argc, char** argv)
 
 			texChangeTimer = 0.0f;
 			if (texChoice > 3) texChoice = 0;
-
-			std::cout << texChoice << std::endl;
 
 			switch (texChoice) {
 				case 0:
@@ -162,18 +173,18 @@ int main(int argc, char** argv)
 		}
 
 		w.clear(.25f, .5f, .75f, 1.0f);
-/*
-   		Matrix4 view;
-		Matrix4 projection;
-		Matrix4 model;
 
-		projection = Matrix4::perspective(antisocial::radians(45.0f), (float)w.getWidth() / (float)w.getHeight(), 0.1f, 100.0f);
+  		// Matrix4 view;
+		// Matrix4 projection;
+		// Matrix4 model;
+		//
+		// projection = Matrix4::perspective(antisocial::radians(45.0f), (float)w.getWidth() / (float)w.getHeight(), 0.1f, 100.0f);
+		//
+		// view = Matrix4::translate(view, Vector3(0.0f, 0.0f, 0.0f));
+		//
+		// model = Matrix4::translate(model, Vector3(0.0f, 0.0f, -5.0f));
+		// model = Matrix4::rotate(model, antisocial::radians((float)glfwGetTime() * 5), Vector3(0.0f, 1.0f, 1.0f));
 
-		view = Matrix4::translate(view, Vector3(0.0f, 0.0f, 0.0f));
-
-		model = Matrix4::translate(model, Vector3(0.0f, 0.0f, -5.0f));
-		model = Matrix4::rotate(model, antisocial::radians((float)glfwGetTime() * 5), Vector3(0.0f, 1.0f, 1.0f));
-*/
 //		std::cout << "--Printing Matrix4--" << std::endl;
 //		proj.toString();
 
@@ -185,19 +196,18 @@ int main(int argc, char** argv)
 		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
 
 		//DEBUG CODE FOR GLM::MAT4
-		/*
-		float arr[16] = {0.0f};
+		// float arr[16] = {0.0f};
+		//
+		// const float* matVals = (const float*)glm::value_ptr(projection);
+		// for (int i = 0; i < 16; i++)
+		// {
+		// 	arr[i] = matVals[i];
+		// 	std::cout << arr[i] << ", ";
+		//
+		// 	if (i == 3 || i == 7 || i == 11 || i == 15)
+		// 		std::cout << std::endl;
+		// }
 
-		const float* matVals = (const float*)glm::value_ptr(projection);
-		for (int i = 0; i < 16; i++)
-		{
-			arr[i] = matVals[i];
-			std::cout << arr[i] << ", ";
-
-			if (i == 3 || i == 7 || i == 11 || i == 15)
-				std::cout << std::endl;
-		}
-		*/
 		shader.bind();
 
 		shader.setMatrix4("view", /*view._elements*/glm::value_ptr(view));
@@ -206,7 +216,7 @@ int main(int argc, char** argv)
 		float zPos = 0.0f;
 		int zCounter = 0;
 
-		for (int i = 0; i < 10000; i++)
+		for (int i = 0; i < 15000; i++)
 		{
 			positions[zCounter].z = zPos;
 			glm::mat4 model;
@@ -220,9 +230,9 @@ int main(int argc, char** argv)
 			else
 				overridingTexture.bind(0);
 
-			glBindVertexArray(vao);
+			//glBindVertexArray(vao);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
-			glBindVertexArray(0);
+			//glBindVertexArray(0);
 
 			zCounter++;
 			if (zCounter > 9)
