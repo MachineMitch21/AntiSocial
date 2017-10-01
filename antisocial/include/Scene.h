@@ -10,7 +10,7 @@ namespace antisocial
     public:
         Scene();
         ~Scene();
-        
+
     private:
     };
 

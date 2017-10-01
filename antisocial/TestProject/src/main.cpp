@@ -10,9 +10,17 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+//#define _USEORTHO_
+
 using antisocial::Matrix4;
 using antisocial::Vector3;
 using antisocial::Texture2D;
+
+
+bool drawWireframe = false;
+
+void printFPSandMilliSeconds(int& nbFrames, float& lastTimeCount, float& currentFrame);
+void debug_glm_mat4(glm::mat4& matToDebug);
 
 int main(int argc, char** argv)
 {
@@ -120,7 +128,12 @@ int main(int argc, char** argv)
 	glm::mat4 view;
 	glm::mat4 projection;
 
+#ifdef _USEORTHO_
+	projection = glm::ortho(0.0f, 800.0f, 600.0f, 0.0f, 1.0f, -1.0f);
+#else
 	projection = glm::perspective(glm::radians(45.0f), (float)w.getWidth() / (float)w.getHeight(), 0.1f, 1000.0f);
+#endif
+
 	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
 
 	shader.bind();
@@ -128,25 +141,27 @@ int main(int argc, char** argv)
 	shader.setMatrix4("view", /*view._elements*/glm::value_ptr(view));
 	shader.setMatrix4("projection", /*projection._elements*/glm::value_ptr(projection));
 
+	// GAME LOOP
 	while(!w.IsClosed())
 	{
+		currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
+
+		nbFrames++;
+		printFPSandMilliSeconds(nbFrames, lastTimeCount, currentFrame);
+
+
 		if (w.isKeyPressed(GLFW_KEY_ESCAPE))
 		{
 			break;
 		}
 
-		currentFrame = glfwGetTime();
-		deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
-
-		nbFrames++;
-		if (currentFrame - lastTimeCount >= 1.0f)
+		if (w.isKeyPressed(GLFW_KEY_P))
 		{
-			std::cout << "Milliseconds: " << 1000.0f / nbFrames << std::endl;
-			std::cout << "Frames Per Second: " << nbFrames << std::endl;
-
-			nbFrames = 0;
-			lastTimeCount += 1.0f;
+			drawWireframe = !drawWireframe;
+			glPolygonMode(GL_FRONT_AND_BACK, (drawWireframe ? GL_LINE : GL_FILL));
 		}
 
 		texChangeTimer += deltaTime;
@@ -178,36 +193,7 @@ int main(int argc, char** argv)
 			texture.setImage(texStr);
 		}
 
-
 		w.clear(.25f, .5f, .75f, 1.0f);
-
-  		// Matrix4 view;
-		// Matrix4 projection;
-		// Matrix4 model;
-		//
-		// projection = Matrix4::perspective(antisocial::radians(45.0f), (float)w.getWidth() / (float)w.getHeight(), 0.1f, 100.0f);
-		//
-		// view = Matrix4::translate(view, Vector3(0.0f, 0.0f, 0.0f));
-		//
-		// model = Matrix4::translate(model, Vector3(0.0f, 0.0f, -5.0f));
-		// model = Matrix4::rotate(model, antisocial::radians((float)glfwGetTime() * 5), Vector3(0.0f, 1.0f, 1.0f));
-
-//		std::cout << "--Printing Matrix4--" << std::endl;
-//		proj.toString();
-
-
-		//DEBUG CODE FOR GLM::MAT4
-		// float arr[16] = {0.0f};
-		//
-		// const float* matVals = (const float*)glm::value_ptr(projection);
-		// for (int i = 0; i < 16; i++)
-		// {
-		// 	arr[i] = matVals[i];
-		// 	std::cout << arr[i] << ", ";
-		//
-		// 	if (i == 3 || i == 7 || i == 11 || i == 15)
-		// 		std::cout << std::endl;
-		// }
 
 		float zPos = 0.0f;
 		int zCounter = 0;
@@ -218,6 +204,8 @@ int main(int argc, char** argv)
 			glm::mat4 model;
 			model = glm::translate(model, positions[zCounter]);
 			model = glm::rotate(model, currentFrame * 2.0f, glm::vec3(0, 1.0f, 1.0f));
+
+			// debug_glm_mat4(model);
 
 			shader.setMatrix4("model", /*model._elements*/glm::value_ptr(model));
 
@@ -243,4 +231,36 @@ int main(int argc, char** argv)
 	glDeleteBuffers(1, &vbo);
 
 	return 0;
+}
+
+
+void printFPSandMilliSeconds(int& nbFrames, float& lastTimeCount, float& currentFrame)
+{
+	if (currentFrame - lastTimeCount >= 1.0f)
+	{
+		std::cout << "Milliseconds: " << 1000.0f / nbFrames << std::endl;
+		std::cout << "Frames Per Second: " << nbFrames << std::endl;
+
+		nbFrames = 0;
+		lastTimeCount += 1.0f;
+	}
+}
+
+
+void debug_glm_mat4(glm::mat4& matToDebug)
+{
+	std::cout << "----------Printing Matrix4 elements----------" << std::endl;
+	float arr[16] = {0.0f};
+
+	const float* matVals = (const float*)glm::value_ptr(matToDebug);
+	for (int i = 0; i < 16; i++)
+	{
+		arr[i] = matVals[i];
+		std::cout << arr[i] << ", ";
+
+		if (i == 3 || i == 7 || i == 11 || i == 15)
+			std::cout << std::endl;
+	}
+
+	std::cout << "---------------------------------------------" << std::endl;
 }

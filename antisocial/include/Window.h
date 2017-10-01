@@ -32,8 +32,8 @@ namespace antisocial {
 		int getHeight();
 		void setCursor(CURSOR_MODE mode);
 		void setIcon(const std::string path);
-	
-		bool isKeyPressed(unsigned int keycode);
+
+		bool isKeyPressed(unsigned int keycode);		
 		bool isMouseButtonPressed(unsigned int button);
 		bool isCursorActive();
 		bool isMinimized();
@@ -50,7 +50,7 @@ namespace antisocial {
 		friend void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 		friend void window_iconify_callback(GLFWwindow* window, int iconified);
 		friend void error_callback(int error, const char* description);
-	
+
 	private:
 		GLFWwindow* _window;
 
