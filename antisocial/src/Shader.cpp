@@ -13,9 +13,14 @@ Shader::Shader(std::string* files, GLenum* types)
 	link_program();
 }
 
-void Shader::bind() {
-	glActiveTexture(GL_TEXTURE0);
+void Shader::bind()
+{
 	glUseProgram(_handle);
+}
+
+void Shader::unbind()
+{
+	glUseProgram(0);
 }
 
 void Shader::setMatrix4(const std::string& name, const float* v)

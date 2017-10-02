@@ -19,6 +19,8 @@ namespace antisocial {
 		~Shader();
 
 		void bind();
+		void unbind();
+		
 		GLuint& getProgram();
 
 		void setMatrix4(const std::string& name, const float* v);

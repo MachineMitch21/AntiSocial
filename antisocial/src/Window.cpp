@@ -4,8 +4,6 @@ using antisocial::Window;
 
 #include "stb_image.h"
 
-bool Window::_keys[MAX_KEYS];
-bool Window::_buttons[MAX_MOUSE_BUTTONS];
 double Window::_x;
 double Window::_y;
 
@@ -15,36 +13,12 @@ Window::Window(const std::string title, int width, int height)
 		_width(width),
 		_height(height)
 {
-
-	for (int i = 0; i < MAX_KEYS; i++) {
-		_keys[i] = false;
-	}
-
-	for (int i = 0; i < MAX_MOUSE_BUTTONS; i++) {
-		_buttons[i] = false;
-	}
-
 	if (!init())
 		glfwTerminate();
 }
 
 bool Window::IsClosed() {
 	return glfwWindowShouldClose(_window);
-}
-
-bool Window::isKeyPressed(unsigned int keycode) {
-
-	if (keycode >= MAX_KEYS) {
-		return false;
-	}
-	return _keys[keycode];
-}
-
-bool Window::isMouseButtonPressed(unsigned int button) {
-	if (button >= MAX_MOUSE_BUTTONS) {
-		return false;
-	}
-	return _buttons[button];
 }
 
 void Window::close() {
@@ -185,10 +159,8 @@ bool Window::init() {
 	glfwGetFramebufferSize(_window, &_width, &_height);
 	glfwSetWindowUserPointer(_window, this);
 
-	glfwSetKeyCallback(_window, key_callback);
 	glfwSetFramebufferSizeCallback(_window, framebuffer_size_callback);
 	glfwSetCursorPosCallback(_window, cursor_position_callback);
-	glfwSetMouseButtonCallback(_window, mouse_button_callback);
 	glfwSetScrollCallback(_window, scroll_callback);
 	glfwSetWindowIconifyCallback(_window, window_iconify_callback);
 	glfwSetErrorCallback(error_callback);
@@ -197,12 +169,6 @@ bool Window::init() {
 }
 
 //Callback functions
-
-void antisocial::key_callback(GLFWwindow* window, int key, int scancode, int action, int mode) {
-	Window* win = (Window*)glfwGetWindowUserPointer(window);
-	win->_keys[key] = (action != GLFW_RELEASE);
-}
-
 void antisocial::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	Window* win = (Window*)glfwGetWindowUserPointer(window);
 	win->_width = width;
@@ -214,11 +180,6 @@ void antisocial::cursor_position_callback(GLFWwindow* window, double xpos, doubl
 	Window* win = (Window*)glfwGetWindowUserPointer(window);
 	win->_x = xpos;
 	win->_y = ypos;
-}
-
-void antisocial::mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
-	Window* win = (Window*)glfwGetWindowUserPointer(window);
-	win->_buttons[button] = (action != GLFW_RELEASE);
 }
 
 void antisocial::scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {

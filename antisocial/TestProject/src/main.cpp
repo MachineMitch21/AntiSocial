@@ -4,6 +4,7 @@
 #include <Matrix4.h>
 #include <Vector3.h>
 #include <Texture2D.h>
+#include <Input.h>
 #include <string>
 
 #include <glm/glm.hpp>
@@ -15,7 +16,7 @@
 using antisocial::Matrix4;
 using antisocial::Vector3;
 using antisocial::Texture2D;
-
+using namespace antisocial::input;
 
 bool drawWireframe = false;
 
@@ -25,6 +26,7 @@ void debug_glm_mat4(glm::mat4& matToDebug);
 int main(int argc, char** argv)
 {
 	antisocial::Window w("USING ANTISOCIAL LIB", 800, 600);
+	Input i;
 
 	Texture2D texture("../../extras/bricks.jpg");
 	Texture2D overridingTexture("../../extras/bricks.jpg");
@@ -77,6 +79,16 @@ int main(int argc, char** argv)
         -0.5f,  0.5f, -0.5f, 1.0f, 0.5f, 0.0f, 0.0f, 0.0f
 	};
 
+	unsigned int indices[]
+	{
+		0,1,3,  0,3,2,
+		1,4,7,	1,7,3,
+		4,5,6,	4,6,7,
+		5,0,2,	5,2,6,
+		4,1,0,	4,0,5,
+		2,3,7,	2,3,6
+	};
+
 	glm::vec3 positions[10]
 	{
 		glm::vec3(-2.5f,-2.0f, 0.0f),
@@ -96,15 +108,23 @@ int main(int argc, char** argv)
 
 	antisocial::Shader shader(srcs, types);
 
-	GLuint vao, vbo;
+	GLuint vao, vbo, ibo;
+
+	int iboSize;
 
 	glGenBuffers(1, &vbo);
+	glGenBuffers(1, &ibo);
 	glGenVertexArrays(1, &vao);
 
 	glBindVertexArray(vao);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
+
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &iboSize);
 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
@@ -144,25 +164,25 @@ int main(int argc, char** argv)
 	// GAME LOOP
 	while(!w.IsClosed())
 	{
-		currentFrame = glfwGetTime();
-		deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
 
-
-		nbFrames++;
-		printFPSandMilliSeconds(nbFrames, lastTimeCount, currentFrame);
-
-
-		if (w.isKeyPressed(GLFW_KEY_ESCAPE))
+		if (Input::keyDown(KeyCode::ESCAPE))
 		{
 			break;
 		}
 
-		if (w.isKeyPressed(GLFW_KEY_P))
+		if (Input::keyDown(KeyCode::P))
 		{
 			drawWireframe = !drawWireframe;
+
 			glPolygonMode(GL_FRONT_AND_BACK, (drawWireframe ? GL_LINE : GL_FILL));
 		}
+
+		currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
+		nbFrames++;
+		printFPSandMilliSeconds(nbFrames, lastTimeCount, currentFrame);
 
 		texChangeTimer += deltaTime;
 
@@ -203,9 +223,7 @@ int main(int argc, char** argv)
 			positions[zCounter].z = zPos;
 			glm::mat4 model;
 			model = glm::translate(model, positions[zCounter]);
-			model = glm::rotate(model, currentFrame * 2.0f, glm::vec3(0, 1.0f, 1.0f));
-
-			// debug_glm_mat4(model);
+			model = glm::rotate(model, currentFrame * 2.0f, glm::vec3(0, 1.0f, 0.0f));
 
 			shader.setMatrix4("model", /*model._elements*/glm::value_ptr(model));
 
@@ -215,7 +233,8 @@ int main(int argc, char** argv)
 				overridingTexture.bind(0);
 
 			glDrawArrays(GL_TRIANGLES, 0, 36);
-
+			//glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+			//shader.unbind();
 			zCounter++;
 			if (zCounter > 9)
 			{
@@ -229,6 +248,7 @@ int main(int argc, char** argv)
 
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
+	glDeleteBuffers(1, &ibo);
 
 	return 0;
 }
