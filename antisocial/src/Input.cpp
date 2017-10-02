@@ -1,8 +1,6 @@
 
 #include <Input.h>
 
-#include <iostream>
-
 using namespace antisocial::input;
 
 bool Input::_keys[MAX_KEYS];
