@@ -1,4 +1,7 @@
 
+#ifndef __SHADER_H__
+#define __SHADER_H__
+
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -20,7 +23,7 @@ namespace antisocial {
 
 		void bind();
 		void unbind();
-		
+
 		GLuint& getProgram();
 
 		void setMatrix4(const std::string& name, const float* v);
@@ -45,3 +48,5 @@ namespace antisocial {
 	};
 
 }
+
+#endif // __SHADER_H__

@@ -1,11 +1,5 @@
 
-#include <Window.h>
-#include <Shader.h>
-#include <Matrix4.h>
-#include <Vector3.h>
-#include <Texture2D.h>
-#include <Input.h>
-#include <Mesh.h>
+#include <AntiSocial.h>
 #include <string>
 
 #include <glm/glm.hpp>

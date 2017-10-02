@@ -13,7 +13,7 @@ namespace antisocial
 
     private:
 
-    }
+    };
 
 }
 

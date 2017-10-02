@@ -5,6 +5,9 @@
 #include <memory>
 
 #include <Shader.h>
+
+using antisocial::Shader;
+
 namespace antisocial
 {
 
