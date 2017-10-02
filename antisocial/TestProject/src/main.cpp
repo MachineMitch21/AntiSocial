@@ -160,9 +160,28 @@ int main(int argc, char** argv)
 	shader.setMatrix4("view", /*view._elements*/glm::value_ptr(view));
 	shader.setMatrix4("projection", /*projection._elements*/glm::value_ptr(projection));
 
+	float verticeOffset = 0.0f;
+
 	// GAME LOOP
 	while(!w.IsClosed())
 	{
+		if (Input::keyPressed(KeyCode::U))
+		{
+			verticeOffset += .01f;
+			if (verticeOffset > 1.0f)
+			{
+				verticeOffset = 1.0f;
+			}
+		}
+
+		if (Input::keyPressed(KeyCode::J))
+		{
+			verticeOffset -= .01f;
+			if (verticeOffset < 0.0f)
+			{
+				verticeOffset = 0.0f;
+			}
+		}
 
 		if (Input::keyDown(KeyCode::ESCAPE))
 		{
@@ -173,6 +192,7 @@ int main(int argc, char** argv)
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
+		shader.setFloat("verticeOffset", verticeOffset);
 		shader.setFloat("time", currentFrame);
 
 		nbFrames++;
@@ -213,7 +233,7 @@ int main(int argc, char** argv)
 		float zPos = 0.0f;
 		int zCounter = 0;
 
-		for (int i = 0; i < 10000; i++)
+		for (int i = 0; i < 10; i++)
 		{
 			positions[zCounter].z = zPos;
 			glm::mat4 model;

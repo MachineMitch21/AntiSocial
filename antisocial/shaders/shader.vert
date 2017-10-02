@@ -14,10 +14,12 @@ out vec3 normal;
 
 uniform float time;
 
+uniform float verticeOffset;
+
 void main()
 {
 	vec3 pos = Pos;
-	pos.xyz += Normal.xyz * sin(time);
+	pos.xyz += Normal.xyz * verticeOffset;
 
 	normal = Normal;
 	fragColor = Color;
