@@ -8,7 +8,6 @@ Mesh::Mesh(float* vertices, int numVertices)
         _vertices(vertices),
         _numVertices(numVertices)
 {
-
 }
 
 Mesh::~Mesh()
@@ -32,7 +31,6 @@ void Mesh::draw(bool wireframe)
 
     if (_vao != NULL || _vbo != NULL)
     {
-        //glBindVertexArray(*_vao);
         glBindBuffer(GL_ARRAY_BUFFER, *_vbo);
         glDrawArrays(GL_TRIANGLES, 0, _numVertices);
     }

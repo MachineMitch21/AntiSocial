@@ -184,34 +184,35 @@ int main(int argc, char** argv)
 		nbFrames++;
 		printFPSandMilliSeconds(nbFrames, lastTimeCount, currentFrame);
 
-		texChangeTimer += deltaTime;
-
-		if (texChangeTimer >= 1.0f)
-		{
-			std::string texStr;
-
-			texChangeTimer = 0.0f;
-			if (texChoice > 3) texChoice = 0;
-
-			switch (texChoice) {
-				case 0:
-					texStr = "../../extras/jim-carrey.png";
-					break;
-				case 1:
-					texStr = "../../extras/index.png";
-					break;
-				case 2:
-					texStr = "../../extras/troll.png";
-					break;
-				case 3:
-					texStr = "../../extras/antisocial_icon.png";
-					break;
-			}
-
-			texChoice++;
-
-			//texture.setImage(texStr);
-		}
+		// DONT CHANGE TEXTURES RIGHT NOW
+		// texChangeTimer += deltaTime;
+		//
+		// if (texChangeTimer >= 1.0f)
+		// {
+		// 	std::string texStr;
+		//
+		// 	texChangeTimer = 0.0f;
+		// 	if (texChoice > 3) texChoice = 0;
+		//
+		// 	switch (texChoice) {
+		// 		case 0:
+		// 			texStr = "../../extras/jim-carrey.png";
+		// 			break;
+		// 		case 1:
+		// 			texStr = "../../extras/index.png";
+		// 			break;
+		// 		case 2:
+		// 			texStr = "../../extras/troll.png";
+		// 			break;
+		// 		case 3:
+		// 			texStr = "../../extras/antisocial_icon.png";
+		// 			break;
+		// 	}
+		//
+		// 	texChoice++;
+		//
+		// 	texture.setImage(texStr);
+		// }
 
 		w.clear(.25f, .5f, .75f, 1.0f);
 
