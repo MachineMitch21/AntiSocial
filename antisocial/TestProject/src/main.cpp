@@ -5,6 +5,7 @@
 #include <Vector3.h>
 #include <Texture2D.h>
 #include <Input.h>
+#include <Mesh.h>
 #include <string>
 
 #include <glm/glm.hpp>
@@ -16,6 +17,7 @@
 using antisocial::Matrix4;
 using antisocial::Vector3;
 using antisocial::Texture2D;
+using antisocial::Mesh;
 using namespace antisocial::input;
 
 bool drawWireframe = false;
@@ -170,13 +172,6 @@ int main(int argc, char** argv)
 			break;
 		}
 
-		if (Input::keyDown(KeyCode::P))
-		{
-			drawWireframe = !drawWireframe;
-
-			glPolygonMode(GL_FRONT_AND_BACK, (drawWireframe ? GL_LINE : GL_FILL));
-		}
-
 		currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
@@ -218,7 +213,7 @@ int main(int argc, char** argv)
 		float zPos = 0.0f;
 		int zCounter = 0;
 
-		for (int i = 0; i < 10000; i++)
+		for (int i = 0; i < 10; i++)
 		{
 			positions[zCounter].z = zPos;
 			glm::mat4 model;
@@ -232,7 +227,11 @@ int main(int argc, char** argv)
 			else
 				overridingTexture.bind(0);
 
-			glDrawArrays(GL_TRIANGLES, 0, 36);
+			Mesh mesh;
+			mesh.setVBO(&vbo);
+			mesh.setVAO(&vao);
+			mesh.draw(false);
+			//glDrawArrays(GL_TRIANGLES, 0, 36);
 			//glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 			//shader.unbind();
 			zCounter++;

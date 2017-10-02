@@ -1,6 +1,8 @@
 #ifndef __DRAWABLE_H__
 #define __DRAWABLE_H__
 
+#include <GL/glew.h>
+
 namespace antisocial
 {
 
