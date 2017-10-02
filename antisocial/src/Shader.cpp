@@ -144,6 +144,7 @@ std::string Shader::load_shader(const std::string& filename){
 Shader::~Shader()
 {
 	for (int i = 0; i < MAX_SHADERS; i++) {
+		glDetachShader(_handle, _shaders[i]);
 		glDeleteShader(_shaders[i]);
 	}
 }

@@ -10,7 +10,7 @@ namespace antisocial
     class Mesh : public Drawable
     {
     public:
-        Mesh();
+        Mesh(float* vertices, int numVertices);
         ~Mesh();
 
         void draw(bool wireframe) override;
@@ -18,6 +18,8 @@ namespace antisocial
         void setVBO(GLuint* vbo);
         void setVAO(GLuint* vao);
     private:
+        float*  _vertices;
+        int     _numVertices;
         GLuint* _vao;
         GLuint* _vbo;
     };

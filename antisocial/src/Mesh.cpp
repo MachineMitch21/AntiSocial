@@ -3,7 +3,10 @@
 
 using antisocial::Mesh;
 
-Mesh::Mesh()
+Mesh::Mesh(float* vertices, int numVertices)
+    :   Drawable(),
+        _vertices(vertices),
+        _numVertices(numVertices)
 {
 
 }
@@ -29,8 +32,8 @@ void Mesh::draw(bool wireframe)
 
     if (_vao != NULL || _vbo != NULL)
     {
-        glBindVertexArray(*_vao);
+        //glBindVertexArray(*_vao);
         glBindBuffer(GL_ARRAY_BUFFER, *_vbo);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glDrawArrays(GL_TRIANGLES, 0, _numVertices);
     }
 }
