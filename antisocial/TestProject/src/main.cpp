@@ -159,12 +159,22 @@ int main(int argc, char** argv)
 
 	shader.setMatrix4("view", /*view._elements*/glm::value_ptr(view));
 	shader.setMatrix4("projection", /*projection._elements*/glm::value_ptr(projection));
+	shader.setVector3("ambientLightColor", 0.15f, 0.15f, 0.15f);
+	shader.setVector3("lightColor", 1.0f, 1.0f, 1.0f);
 
 	float verticeOffset = 0.0f;
+
+	glm::vec3 lightPos = glm::vec3(0.0f, 0.0f, 5.0f);
 
 	// GAME LOOP
 	while(!w.IsClosed())
 	{
+		w.clear(0.1f, 0.1f, 0.1f, 1.0f);
+
+		currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
 		if (Input::keyPressed(KeyCode::U))
 		{
 			verticeOffset += .01f;
@@ -188,12 +198,36 @@ int main(int argc, char** argv)
 			break;
 		}
 
-		currentFrame = glfwGetTime();
-		deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
+		if (Input::keyPressed(KeyCode::W))
+		{
+			lightPos.z -= deltaTime * 5.0f;
+		}
+		else if (Input::keyPressed(KeyCode::S))
+		{
+			lightPos.z += deltaTime * 5.0f;
+		}
+
+		if (Input::keyPressed(KeyCode::A))
+		{
+			lightPos.x -= deltaTime * 5.0f;
+		}
+		else if (Input::keyPressed(KeyCode::D))
+		{
+			lightPos.x += deltaTime * 5.0f;
+		}
+
+		if (Input::keyPressed(KeyCode::Q))
+		{
+			lightPos.y += deltaTime * 5.0f;
+		}
+		else if (Input::keyPressed(KeyCode::E))
+		{
+			lightPos.y -= deltaTime * 5.0f;
+		}
 
 		shader.setFloat("verticeOffset", verticeOffset);
 		shader.setFloat("time", currentFrame);
+		shader.setVector3("lightPos", lightPos.x, lightPos.y, lightPos.z);
 
 		nbFrames++;
 		printFPSandMilliSeconds(nbFrames, lastTimeCount, currentFrame);
@@ -204,7 +238,7 @@ int main(int argc, char** argv)
 		// if (texChangeTimer >= 1.0f)
 		// {
 		// 	std::string texStr;
-		//
+		// 
 		// 	texChangeTimer = 0.0f;
 		// 	if (texChoice > 3) texChoice = 0;
 		//
@@ -228,7 +262,6 @@ int main(int argc, char** argv)
 		// 	texture.setImage(texStr);
 		// }
 
-		w.clear(.25f, .5f, .75f, 1.0f);
 
 		float zPos = 0.0f;
 		int zCounter = 0;
@@ -238,7 +271,7 @@ int main(int argc, char** argv)
 			positions[zCounter].z = zPos;
 			glm::mat4 model;
 			model = glm::translate(model, positions[zCounter]);
-			model = glm::rotate(model, currentFrame * 2.0f, glm::vec3(0, 1.0f, 0.0f));
+			//model = glm::rotate(model, currentFrame * 2.0f, glm::vec3(0, 1.0f, 0.0f));
 
 			shader.setMatrix4("model", /*model._elements*/glm::value_ptr(model));
 
