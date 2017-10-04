@@ -12,11 +12,11 @@ uniform vec3 lightPos;
 uniform vec3 lightColor;
 
 uniform vec3 ambientLightColor;
+uniform float ambientIntensity = 0.25f;
 
 void main()
 {
-    float ambientStrength = 0.1f;
-    vec3 ambient = ambientStrength * ambientLightColor;
+    vec3 ambient = ambientIntensity * ambientLightColor;
 
     vec3 norm = normalize(normal);
     vec3 lightDir = normalize(lightPos - fragPos);

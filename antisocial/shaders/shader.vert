@@ -18,13 +18,15 @@ uniform float verticeOffset;
 
 void main()
 {
+	mat4 model_view = model * view;
 	vec3 pos = Pos;
 	pos.xyz += Normal.xyz * verticeOffset;
 
-	normal = Normal;
+	// Our normals need to be updated with the model and view matrices for transformations
+	normal = Normal * mat3(model_view);
 	fragColor = Color;
 	texCoord = TexCoord;
-    gl_Position = vec4(pos, 1.0f) * model * view * projection;
+    gl_Position = (vec4(pos, 1.0f) * model_view * projection);
 
 	fragPos = vec3(model * vec4(pos, 1.0f));
 }

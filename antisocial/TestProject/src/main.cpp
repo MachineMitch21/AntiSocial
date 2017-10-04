@@ -6,6 +6,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <math.h>
+
 //#define _USEORTHO_
 
 using antisocial::Matrix4;
@@ -21,7 +23,7 @@ void debug_glm_mat4(glm::mat4& matToDebug);
 
 int main(int argc, char** argv)
 {
-	antisocial::Window w("USING ANTISOCIAL LIB", 800, 600);
+	antisocial::Window w("ANTISOCIAL TEST PROJECT", 800, 600);
 	Input i;
 
 	Texture2D texture("../../extras/bricks.jpg");
@@ -159,8 +161,8 @@ int main(int argc, char** argv)
 
 	shader.setMatrix4("view", /*view._elements*/glm::value_ptr(view));
 	shader.setMatrix4("projection", /*projection._elements*/glm::value_ptr(projection));
-	shader.setVector3("ambientLightColor", 0.15f, 0.15f, 0.15f);
-	shader.setVector3("lightColor", 1.0f, 0.5f, 0.5f);
+	shader.setVector3("ambientLightColor", 1.0f, 1.0f, 1.0f);
+	shader.setVector3("lightColor", 1.0f, 1.0f, 1.0f);
 
 	float verticeOffset = 0.0f;
 
@@ -174,6 +176,8 @@ int main(int argc, char** argv)
 		currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
+
+		shader.setFloat("ambientIntensity", .25f);
 
 		if (Input::keyDown(KeyCode::ESCAPE))
 		{
@@ -271,11 +275,12 @@ int main(int argc, char** argv)
 		float zPos = 0.0f;
 		int zCounter = 0;
 
-		for (int i = 0; i < 10000; i++)
+		for (int i = 0; i < 10; i++)
 		{
 			positions[zCounter].z = zPos;
 			glm::mat4 model;
 			model = glm::translate(model, positions[zCounter]);
+			model = glm::rotate(model, currentFrame, glm::vec3(0.0f, 1.0f, 1.0f));
 
 			shader.setMatrix4("model", /*model._elements*/glm::value_ptr(model));
 
