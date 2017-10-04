@@ -16,6 +16,18 @@ out vec3 normal;
 uniform float time;
 uniform float verticeOffset;
 
+/******************************************************************************
+	Right now, matrices are being passed to the GPU in row-major order.
+	Meaning all mvp matrix multiplication happens in this order:
+			(Model * View * Projection)
+
+	Otherwise it would happen in this order:
+			(Projection * View * Model)
+
+	All other multiplication dealing with matrices would be reversed if we start
+	passing matrices to the GPU in col-major order.
+*******************************************************************************/
+
 void main()
 {
 	mat4 model_view = model * view;
