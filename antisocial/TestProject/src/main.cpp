@@ -160,7 +160,7 @@ int main(int argc, char** argv)
 	shader.setMatrix4("view", /*view._elements*/glm::value_ptr(view));
 	shader.setMatrix4("projection", /*projection._elements*/glm::value_ptr(projection));
 	shader.setVector3("ambientLightColor", 0.15f, 0.15f, 0.15f);
-	shader.setVector3("lightColor", 1.0f, 1.0f, 1.0f);
+	shader.setVector3("lightColor", 1.0f, 0.5f, 0.5f);
 
 	float verticeOffset = 0.0f;
 
@@ -175,7 +175,12 @@ int main(int argc, char** argv)
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		if (Input::keyPressed(KeyCode::U))
+		if (Input::keyDown(KeyCode::ESCAPE))
+		{
+			break;
+		}
+
+		if (Input::keyPressed(KeyCode::UP))
 		{
 			verticeOffset += .01f;
 			if (verticeOffset > 1.0f)
@@ -184,18 +189,13 @@ int main(int argc, char** argv)
 			}
 		}
 
-		if (Input::keyPressed(KeyCode::J))
+		if (Input::keyPressed(KeyCode::DOWN))
 		{
 			verticeOffset -= .01f;
 			if (verticeOffset < 0.0f)
 			{
 				verticeOffset = 0.0f;
 			}
-		}
-
-		if (Input::keyDown(KeyCode::ESCAPE))
-		{
-			break;
 		}
 
 		if (Input::keyPressed(KeyCode::W))
@@ -225,6 +225,11 @@ int main(int argc, char** argv)
 			lightPos.y -= deltaTime * 5.0f;
 		}
 
+		if (Input::keyDown(KeyCode::V))
+		{
+			drawWireframe = !drawWireframe;
+		}
+
 		shader.setFloat("verticeOffset", verticeOffset);
 		shader.setFloat("time", currentFrame);
 		shader.setVector3("lightPos", lightPos.x, lightPos.y, lightPos.z);
@@ -238,7 +243,7 @@ int main(int argc, char** argv)
 		// if (texChangeTimer >= 1.0f)
 		// {
 		// 	std::string texStr;
-		// 
+		//
 		// 	texChangeTimer = 0.0f;
 		// 	if (texChoice > 3) texChoice = 0;
 		//
@@ -266,12 +271,11 @@ int main(int argc, char** argv)
 		float zPos = 0.0f;
 		int zCounter = 0;
 
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 10000; i++)
 		{
 			positions[zCounter].z = zPos;
 			glm::mat4 model;
 			model = glm::translate(model, positions[zCounter]);
-			//model = glm::rotate(model, currentFrame * 2.0f, glm::vec3(0, 1.0f, 0.0f));
 
 			shader.setMatrix4("model", /*model._elements*/glm::value_ptr(model));
 
@@ -280,10 +284,10 @@ int main(int argc, char** argv)
 			else
 				overridingTexture.bind(0);
 
-			Mesh mesh(vertices, 36);
+			Mesh mesh(36);
 			mesh.setVBO(&vbo);
 			mesh.setVAO(&vao);
-			mesh.draw(false);
+			mesh.draw(drawWireframe);
 			//glDrawArrays(GL_TRIANGLES, 0, 36);
 			//glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 			//shader.unbind();

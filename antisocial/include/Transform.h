@@ -2,6 +2,10 @@
 #ifndef __TRANSFORM_H__
 #define __TRANSFORM_H__
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 namespace antisocial
 {
 
@@ -12,7 +16,9 @@ namespace antisocial
         ~Transform();
 
     private:
-
+        glm::vec3   _position;
+        glm::vec3   _rotation;
+        glm::vec3   _scale;
     };
 
 }

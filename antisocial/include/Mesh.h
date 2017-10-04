@@ -3,6 +3,7 @@
 #define __MESH_H__
 
 #include <Drawable.h>
+#include <Shader.h>
 
 namespace antisocial
 {
@@ -10,18 +11,20 @@ namespace antisocial
     class Mesh : public Drawable
     {
     public:
-        Mesh(float* vertices, int numVertices);
+        Mesh(unsigned int numVertices);
+        Mesh(unsigned int numVertices, Shader* shader);
         ~Mesh();
 
         void draw(bool wireframe) override;
 
+        void setShader(Shader* shader);
         void setVBO(GLuint* vbo);
         void setVAO(GLuint* vao);
     private:
-        float*  _vertices;
-        int     _numVertices;
-        GLuint* _vao;
-        GLuint* _vbo;
+        Shader*         _shader;
+        unsigned int    _numVertices;
+        GLuint*         _vao;
+        GLuint*         _vbo;
     };
 
 }

@@ -1,18 +1,36 @@
 
 #include <Mesh.h>
 
+#include <iostream>
+
 using antisocial::Mesh;
 
-Mesh::Mesh(float* vertices, int numVertices)
+Mesh::Mesh(unsigned int numVertices)
     :   Drawable(),
-        _vertices(vertices),
-        _numVertices(numVertices)
+        _shader(NULL),
+        _numVertices(numVertices),
+        _vao(NULL),
+        _vbo(NULL)
+{
+}
+
+Mesh::Mesh(unsigned int numVertices, Shader* shader)
+    :   Drawable(),
+        _shader(shader),
+        _numVertices(numVertices),
+        _vao(NULL),
+        _vbo(NULL)
 {
 }
 
 Mesh::~Mesh()
 {
 
+}
+
+void Mesh::setShader(Shader* shader)
+{
+    _shader = shader;
 }
 
 void Mesh::setVBO(GLuint* vbo)
@@ -31,6 +49,10 @@ void Mesh::draw(bool wireframe)
 
     if (_vao != NULL || _vbo != NULL)
     {
+        if (_shader != NULL)
+        {
+            _shader->bind();
+        }
         glBindBuffer(GL_ARRAY_BUFFER, *_vbo);
         glDrawArrays(GL_TRIANGLES, 0, _numVertices);
     }
