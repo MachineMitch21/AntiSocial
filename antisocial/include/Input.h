@@ -148,6 +148,8 @@ namespace antisocial
 
             static bool getKey(KeyCode key);
 
+            static void updateContext(GLFWwindow* window);
+
         private:
 
             static bool _keysPrevious[MAX_KEYS];

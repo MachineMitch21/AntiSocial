@@ -10,8 +10,7 @@ bool Input::_buttonsPrevious[MAX_MOUSE_BUTTONS];
 
 Input::Input()
 {
-    glfwSetKeyCallback(glfwGetCurrentContext(), key_callback);
-    glfwSetMouseButtonCallback(glfwGetCurrentContext(), mouse_button_callback);
+    updateContext(glfwGetCurrentContext());
 }
 
 Input::~Input()
@@ -130,6 +129,15 @@ bool Input::mouseButtonUp(MouseButton button)
     _buttonsPrevious[button] = _buttons[button];
 
     return buttonUpThisFrame;
+}
+
+void Input::updateContext(GLFWwindow* window)
+{
+    if (window != NULL)
+    {
+        glfwSetKeyCallback(window, key_callback);
+        glfwSetMouseButtonCallback(window, mouse_button_callback);
+    }
 }
 
 void antisocial::input::key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
