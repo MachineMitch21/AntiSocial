@@ -172,26 +172,26 @@ int main(int argc, char** argv)
 	shader.bind();
 
 	shader.setMatrix4("projection", /*projection._elements*/glm::value_ptr(projection));
-	shader.setVector3("ambientLightColor", 0.5f, 0.5f, 0.5f);
+	shader.setVector3("ambientLightColor", 1.0f, 1.0f, 1.0f);
 	shader.setVector3("lightColor", 1.0f, 1.0f, 1.0f);
 
 	float verticeOffset = 0.0f;
 
-	glm::vec3 lightPos = glm::vec3(0.0f, 0.0f, 5.0f);
+	glm::vec3 lightPos = glm::vec3(0.0f, 2.5f, 5.0f);
 
 	glm::vec2 oldMousePos = Input::getCurrentCursorPos();
 
 	// GAME LOOP
 	while(!w.IsClosed())
 	{
-		w.clear(0.75f, 0.75f, 0.75f, 1.0f);
+		w.clear(0.1f, 0.1f, 0.1f, 1.0f);
 
 		currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
 		shader.setFloat("ambientIntensity", .25f);
-		shader.setFloat("specularStrength", .75f);
+		shader.setFloat("specularStrength", .25f);
 
 		if (Input::keyDown(KeyCode::ESCAPE))
 		{
@@ -267,7 +267,7 @@ int main(int argc, char** argv)
 		{
 			glm::mat4 model;
 			model = glm::translate(model, positions[i]);
-			model = glm::rotate(model, currentFrame, glm::vec3(0.0f, 1.0f, 1.0f));
+			//model = glm::rotate(model, currentFrame, glm::vec3(0.0f, 1.0f, 1.0f));
 
 			shader.setMatrix4("model", /*model._elements*/glm::value_ptr(model));
 
