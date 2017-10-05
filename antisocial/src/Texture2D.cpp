@@ -18,6 +18,7 @@ Texture2D::Texture2D(const std::string& texturePath)
 	setImage(texturePath);
 
 	glGenerateMipmap(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 Texture2D::~Texture2D()

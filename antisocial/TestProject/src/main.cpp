@@ -160,11 +160,11 @@ int main(int argc, char** argv)
 	glm::mat4 view;
 	glm::mat4 projection;
 
-#ifdef _USEORTHO_
-	projection = glm::ortho(0.0f, 800.0f, 600.0f, 0.0f, 1.0f, -1.0f);
-#else
-	projection = glm::perspective(glm::radians(45.0f), (float)w.getWidth() / (float)w.getHeight(), 0.1f, 1000.0f);
-#endif
+	#ifdef _USEORTHO_
+		projection = glm::ortho(0.0f, 800.0f, 600.0f, 0.0f, 1.0f, -1.0f);
+	#else
+		projection = glm::perspective(glm::radians(45.0f), (float)w.getWidth() / (float)w.getHeight(), 0.1f, 1000.0f);
+	#endif
 
 	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
 
@@ -252,67 +252,20 @@ int main(int argc, char** argv)
 		nbFrames++;
 		printFPSandMilliSeconds(nbFrames, lastTimeCount, currentFrame);
 
-		// DONT CHANGE TEXTURES RIGHT NOW
-		// texChangeTimer += deltaTime;
-		//
-		// if (texChangeTimer >= 1.0f)
-		// {
-		// 	std::string texStr;
-		//
-		// 	texChangeTimer = 0.0f;
-		// 	if (texChoice > 3) texChoice = 0;
-		//
-		// 	switch (texChoice) {
-		// 		case 0:
-		// 			texStr = "../../extras/jim-carrey.png";
-		// 			break;
-		// 		case 1:
-		// 			texStr = "../../extras/index.png";
-		// 			break;
-		// 		case 2:
-		// 			texStr = "../../extras/troll.png";
-		// 			break;
-		// 		case 3:
-		// 			texStr = "../../extras/antisocial_icon.png";
-		// 			break;
-		// 	}
-		//
-		// 	texChoice++;
-		//
-		// 	texture.setImage(texStr);
-		// }
-
-
-		float zPos = 0.0f;
-		int zCounter = 0;
-
 		for (int i = 0; i < 10; i++)
 		{
-			positions[zCounter].z = zPos;
 			glm::mat4 model;
-			model = glm::translate(model, positions[zCounter]);
-			model = glm::rotate(model, currentFrame, glm::vec3(0.0f, 1.0f, 1.0f));
+			model = glm::translate(model, positions[i]);
+			//model = glm::rotate(model, currentFrame, glm::vec3(0.0f, 1.0f, 1.0f));
 
 			shader.setMatrix4("model", /*model._elements*/glm::value_ptr(model));
 
-			if (zCounter < 5)
-				texture.bind(0);
-			else
-				overridingTexture.bind(0);
+			texture.bind(0);
 
 			Mesh mesh(36);
 			mesh.setVBO(&vbo);
 			mesh.setVAO(&vao);
 			mesh.draw(drawWireframe);
-			//glDrawArrays(GL_TRIANGLES, 0, 36);
-			//glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-			//shader.unbind();
-			zCounter++;
-			if (zCounter > 9)
-			{
-				zCounter = 0;
-				zPos -= 5.0f;
-			}
 		}
 
 		w.update();
