@@ -9,6 +9,7 @@
 #include <Texture2D.h>
 #include <Shader.h>
 #include <Mesh.h>
+#include <Batch.h>
 #include <MeshRenderer.h>
 #include <Transform.h>
 #include <Camera.h>
