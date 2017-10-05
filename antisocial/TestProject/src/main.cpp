@@ -336,6 +336,7 @@ int main(int argc, char** argv)
 		{
 			glm::mat4 model;
 			model = glm::translate(model, lightPos);
+			model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
 
 			lightShader.setMatrix4("model", glm::value_ptr(model));
 			Mesh lightMesh(36);
