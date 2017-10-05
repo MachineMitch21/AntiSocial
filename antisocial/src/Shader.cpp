@@ -2,15 +2,25 @@
 
 using antisocial::Shader;
 
-Shader::Shader(std::string* files, GLenum* types)
+Shader::Shader()
+	:	_handle(glCreateProgram())
 {
-	_handle = glCreateProgram();
+	_shaders.emplace(GL_VERTEX_SHADER, -1);
+	_shaders.emplace(GL_FRAGMENT_SHADER, -1);
+}
 
-	for (int i = 0; i < MAX_SHADERS; i++) {
-		_shaders[i] = compile_shader(load_shader(files[i]), types[i]);
-	}
+void Shader::setVertexShader(const std::string& file)
+{
+	std::string shaderSource = load_shader(file);
+	GLuint shaderID = compile_shader(shaderSource, GL_VERTEX_SHADER);
+	_shaders.at(GL_VERTEX_SHADER) = shaderID;
+}
 
-	link_program();
+void Shader::setFragmentShader(const std::string& file)
+{
+	std::string shaderSource = load_shader(file);
+	GLuint shaderID = compile_shader(shaderSource, GL_FRAGMENT_SHADER);
+	_shaders.at(GL_FRAGMENT_SHADER) = shaderID;
 }
 
 void Shader::bind()
@@ -75,11 +85,12 @@ GLuint& Shader::getProgram() {
 	return _handle;
 }
 
-void Shader::link_program() {
+bool Shader::link_program() {
 
 	//Attach shaders to newly create program and then link everything
-	for (int i = 0; i < MAX_SHADERS; i++) {
-		glAttachShader(_handle, _shaders[i]);
+	for (std::map<GLenum, GLuint>::iterator it = _shaders.begin(); it != _shaders.end(); ++it)
+	{
+		glAttachShader(_handle, it->second);
 	}
 
 	glBindAttribLocation(_handle, 0, "Pos");
@@ -93,7 +104,10 @@ void Shader::link_program() {
 	if (!_success) {
 		glGetProgramInfoLog(_handle, ERR_LOG, NULL, _errLog);
 		std::cout << "ERROR linking shader program:: " << _handle << " ::\n" << _errLog << std::endl;
+		return false;
 	}
+
+	return true;
 }
 
 GLuint Shader::compile_shader(const std::string& shader_src, GLenum shader_type) {
@@ -143,8 +157,9 @@ std::string Shader::load_shader(const std::string& filename){
 
 Shader::~Shader()
 {
-	for (int i = 0; i < MAX_SHADERS; i++) {
-		glDetachShader(_handle, _shaders[i]);
-		glDeleteShader(_shaders[i]);
+	for (std::map<GLenum, GLuint>::iterator it = _shaders.begin(); it != _shaders.end(); ++it)
+	{
+		glDetachShader(_handle, it->second);
+		glDeleteShader(it->second);
 	}
 }

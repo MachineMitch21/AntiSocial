@@ -14,6 +14,8 @@ using antisocial::Matrix4;
 using antisocial::Vector3;
 using antisocial::Texture2D;
 using antisocial::Mesh;
+using antisocial::Shader;
+
 using namespace antisocial::input;
 
 bool drawWireframe = false;
@@ -101,10 +103,19 @@ int main(int argc, char** argv)
 		glm::vec3( 0.0f, 1.0f, 0.0f)
 	};
 
-	std::string srcs[2] = { "../../shaders/shader.vert", "../../shaders/shader.frag" };
-	GLenum types[2] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
+	Shader shader;
 
-	antisocial::Shader shader(srcs, types);
+	shader.setVertexShader("../../shaders/shader.vert");
+	shader.setFragmentShader("../../shaders/shader.frag");
+
+	if (shader.link_program())
+	{
+		std::cout << "Shader program linked successfully" << std::endl;
+	}
+	else
+	{
+		std::cout << "Shader program failed to link!" << std::endl;
+	}
 
 	GLuint vao, vbo, ibo;
 

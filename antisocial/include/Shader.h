@@ -5,9 +5,8 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <vector>
+#include <map>
 #include <GL/glew.h>
-#include <GLFW/glfw3.h>
 
 #define MAX_SHADERS 2
 #define ERR_LOG 512
@@ -17,7 +16,6 @@ namespace antisocial {
 	class Shader
 	{
 	public:
-		Shader(std::string* files, GLenum* types);
 		Shader();
 		~Shader();
 
@@ -25,6 +23,13 @@ namespace antisocial {
 		void unbind();
 
 		GLuint& getProgram();
+
+		void setVertexShader(const std::string& file);
+		void setFragmentShader(const std::string& file);
+
+		//Only to be called if every shader type needed for the shader
+		//program has been given to the shader object
+		bool link_program();
 
 		void setMatrix4(const std::string& name, const float* v);
 		void setVector2(const std::string& name, float v1, float v2);
@@ -36,15 +41,14 @@ namespace antisocial {
 		void setUInteger(const std::string& name, unsigned int v);
 
 	private:
-		void link_program();
 		GLuint compile_shader(const std::string& shader_src, GLenum shader_type);
 		std::string load_shader(const std::string& filename);
 
 	private:
-		GLuint _shaders[MAX_SHADERS];
-		GLuint _handle;
-		GLint _success;
-		GLchar _errLog[ERR_LOG];
+		GLint 						_success;
+ 		std::map<GLenum, GLuint> 	_shaders;
+		GLuint 						_handle;
+		GLchar 						_errLog[ERR_LOG];
 	};
 
 }
