@@ -15,11 +15,6 @@ namespace antisocial {
 		Window(const std::string title, int width, int height);
 		~Window();
 
-		enum CURSOR_MODE{
-			SHOW,
-			DISABLE
-		};
-
 		bool IsClosed();
 		void update();
 		void clear(float r, float g, float b, float a);
@@ -27,7 +22,7 @@ namespace antisocial {
 		double getY();
 		int getWidth();
 		int getHeight();
-		void setCursor(CURSOR_MODE mode);
+		void setCursor(bool show);
 		void setIcon(const std::string path);
 
 		bool isCursorActive();

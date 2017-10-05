@@ -41,13 +41,13 @@ int Window::getHeight() {
 	return _height;
 }
 
-void Window::setCursor(CURSOR_MODE mode) {
-	if (mode == DISABLE) {
+void Window::setCursor(bool show) {
+	if (!show) {
 		glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		_cursorActive = false;
 	}
 
-	else if (mode == SHOW) {
+	else if (show) {
 		glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 		_cursorActive = true;
 	}

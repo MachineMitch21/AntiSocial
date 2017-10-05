@@ -27,7 +27,10 @@ void main()
 {
     vec3 ambient = ambientIntensity * ambientLightColor;
 
-    vec3 lightContribution = getSpecularContribution();
+    vec3 diffuseContribution = getDiffuseContribution();
+    vec3 specularContribution = getSpecularContribution();
+
+    vec3 lightContribution = diffuseContribution + specularContribution;
 
     vec3 result = (ambient + lightContribution);
 

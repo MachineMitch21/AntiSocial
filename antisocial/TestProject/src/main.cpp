@@ -15,6 +15,8 @@ using antisocial::Vector3;
 using antisocial::Texture2D;
 using antisocial::Mesh;
 using antisocial::Shader;
+using antisocial::Camera;
+using antisocial::MOVEMENT_DIRECTION;
 
 using namespace antisocial::input;
 
@@ -27,6 +29,10 @@ int main(int argc, char** argv)
 {
 	antisocial::Window w("ANTISOCIAL TEST PROJECT", 800, 600);
 	Input i;
+
+	w.setCursor(false);
+
+	Camera camera(45.0f, 0.0f, 0.0f, 10.0f, (float)w.getWidth() / (float)w.getHeight(), 0.1f, 1000.0f);
 
 	Texture2D texture("../../extras/bricks.jpg");
 	Texture2D overridingTexture("../../extras/bricks.jpg");
@@ -151,9 +157,6 @@ int main(int argc, char** argv)
 			deltaTime = 0.0f,
 			lastFrame = 0.0f;
 
-	float texChangeTimer = 0.0f;
-	int texChoice = 0;
-
 	float lastTimeCount = glfwGetTime();
 	int nbFrames = 0;
 
@@ -161,38 +164,43 @@ int main(int argc, char** argv)
 	glm::mat4 projection;
 
 	#ifdef _USEORTHO_
-		projection = glm::ortho(0.0f, 800.0f, 600.0f, 0.0f, 1.0f, -1.0f);
+		projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f, 0.1f, 1000.0f);
 	#else
-		projection = glm::perspective(glm::radians(45.0f), (float)w.getWidth() / (float)w.getHeight(), 0.1f, 1000.0f);
+		projection = glm::perspective(camera.getFOV(), camera.getAspectRatio(), camera.getNearClip(), camera.getFarClip());
 	#endif
-
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
 
 	shader.bind();
 
-	shader.setMatrix4("view", /*view._elements*/glm::value_ptr(view));
 	shader.setMatrix4("projection", /*projection._elements*/glm::value_ptr(projection));
-	shader.setVector3("ambientLightColor", 1.0f, 1.0f, 1.0f);
+	shader.setVector3("ambientLightColor", 0.5f, 0.5f, 0.5f);
 	shader.setVector3("lightColor", 1.0f, 1.0f, 1.0f);
 
 	float verticeOffset = 0.0f;
 
 	glm::vec3 lightPos = glm::vec3(0.0f, 0.0f, 5.0f);
 
+	glm::vec2 oldMousePos = Input::getCurrentCursorPos();
+
 	// GAME LOOP
 	while(!w.IsClosed())
 	{
-		w.clear(0.1f, 0.1f, 0.1f, 1.0f);
+		w.clear(0.75f, 0.75f, 0.75f, 1.0f);
 
 		currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
 		shader.setFloat("ambientIntensity", .25f);
+		shader.setFloat("specularStrength", .75f);
 
 		if (Input::keyDown(KeyCode::ESCAPE))
 		{
 			break;
+		}
+
+		if (Input::keyDown(KeyCode::C))
+		{
+			w.setCursor(!w.isCursorActive());
 		}
 
 		if (Input::keyPressed(KeyCode::UP))
@@ -213,32 +221,35 @@ int main(int argc, char** argv)
 			}
 		}
 
+		float xOffset = Input::getCurrentCursorPos().x - oldMousePos.x;
+		float yOffset = oldMousePos.y - Input::getCurrentCursorPos().y;
+
+		oldMousePos = Input::getCurrentCursorPos();
+
+		glm::vec3 camDirection;
+
 		if (Input::keyPressed(KeyCode::W))
 		{
-			lightPos.z -= deltaTime * 5.0f;
+			camDirection += camera.getFront();
 		}
 		else if (Input::keyPressed(KeyCode::S))
 		{
-			lightPos.z += deltaTime * 5.0f;
+			camDirection += -camera.getFront();
 		}
 
 		if (Input::keyPressed(KeyCode::A))
 		{
-			lightPos.x -= deltaTime * 5.0f;
+			camDirection += -glm::normalize(glm::cross(camera.getFront(), camera.getUp()));
 		}
 		else if (Input::keyPressed(KeyCode::D))
 		{
-			lightPos.x += deltaTime * 5.0f;
+			camDirection += glm::normalize(glm::cross(camera.getFront(), camera.getUp()));
 		}
 
-		if (Input::keyPressed(KeyCode::Q))
-		{
-			lightPos.y += deltaTime * 5.0f;
-		}
-		else if (Input::keyPressed(KeyCode::E))
-		{
-			lightPos.y -= deltaTime * 5.0f;
-		}
+		camera.move(camDirection, xOffset, yOffset, deltaTime, true);
+		view = camera.getViewMatrix();
+
+		shader.setMatrix4("view", /*view._elements*/glm::value_ptr(view));
 
 		if (Input::keyDown(KeyCode::V))
 		{
@@ -256,7 +267,7 @@ int main(int argc, char** argv)
 		{
 			glm::mat4 model;
 			model = glm::translate(model, positions[i]);
-			//model = glm::rotate(model, currentFrame, glm::vec3(0.0f, 1.0f, 1.0f));
+			model = glm::rotate(model, currentFrame, glm::vec3(0.0f, 1.0f, 1.0f));
 
 			shader.setMatrix4("model", /*model._elements*/glm::value_ptr(model));
 

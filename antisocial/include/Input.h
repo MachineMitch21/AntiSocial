@@ -3,6 +3,7 @@
 #define __INPUT_H__
 
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
 namespace antisocial
 {
@@ -148,7 +149,12 @@ namespace antisocial
 
             static bool getKey(KeyCode key);
 
+            static glm::vec2 getCurrentCursorPos();
+
             static void updateContext(GLFWwindow* window);
+
+        public:
+            static float LookSensitivity;
 
         private:
 
@@ -163,11 +169,12 @@ namespace antisocial
 
             friend void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
             friend void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+            friend void cursor_movement_callback(GLFWwindow* window, double xpos, double ypos);
         };
 
         void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
         void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
-
+        void cursor_movement_callback(GLFWwindow* window, double xpos, double ypos);
     }
 }
 

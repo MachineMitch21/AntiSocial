@@ -1,16 +1,20 @@
 
 #include <Input.h>
 
+#include <iostream>
+
 using namespace antisocial::input;
 
 bool Input::_keys[MAX_KEYS];
 bool Input::_buttons[MAX_MOUSE_BUTTONS];
 bool Input::_keysPrevious[MAX_KEYS];
 bool Input::_buttonsPrevious[MAX_MOUSE_BUTTONS];
+float Input::LookSensitivity;
 
 Input::Input()
 {
     updateContext(glfwGetCurrentContext());
+    LookSensitivity = 0.1f;
 }
 
 Input::~Input()
@@ -131,12 +135,20 @@ bool Input::mouseButtonUp(MouseButton button)
     return buttonUpThisFrame;
 }
 
+glm::vec2 Input::getCurrentCursorPos()
+{
+    double xpos, ypos;
+    glfwGetCursorPos(glfwGetCurrentContext(), &xpos, &ypos);
+    return glm::vec2((float)xpos, (float)ypos);
+}
+
 void Input::updateContext(GLFWwindow* window)
 {
     if (window != NULL)
     {
         glfwSetKeyCallback(window, key_callback);
         glfwSetMouseButtonCallback(window, mouse_button_callback);
+        glfwSetCursorPosCallback(window, cursor_movement_callback);
     }
 }
 
@@ -148,4 +160,9 @@ void antisocial::input::key_callback(GLFWwindow* window, int key, int scancode, 
 void antisocial::input::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
     Input::_buttons[button] = (action != GLFW_RELEASE);
+}
+
+void antisocial::input::cursor_movement_callback(GLFWwindow* window, double xpos, double ypos)
+{
+
 }
