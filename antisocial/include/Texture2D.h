@@ -14,7 +14,8 @@ namespace antisocial {
 		~Texture2D();
 
 		void bind(unsigned int unit);
-		void setImage(const std::string& path);
+		void setImage(const std::string& path, unsigned int unit);
+		inline GLuint getHandle() const { return _handle; };
 
 	private:
 		int 	_height;

@@ -1,6 +1,7 @@
 
 #include <AntiSocial.h>
 #include <string>
+#include <vector>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -22,6 +23,9 @@ using namespace antisocial::input;
 
 bool drawWireframe = false;
 
+void prepCubeObjectData(GLuint* vao, GLuint* vbo, std::vector<float> vertices);
+void prepLightObjectData(GLuint* vao, GLuint* vbo, std::vector<float> vertices);
+
 void printFPSandMilliSeconds(int& nbFrames, float& lastTimeCount, float& currentFrame);
 void debug_glm_mat4(glm::mat4& matToDebug);
 
@@ -40,7 +44,7 @@ int main(int argc, char** argv)
 	w.setIcon("../../extras/antisocial_icon.png");
 	w.enableVSYNC(true);
 
-	float vertices[]
+	std::vector<float> vertices =
 	{
         -0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f,
          0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f,
@@ -85,6 +89,46 @@ int main(int argc, char** argv)
         -0.5f,  0.5f, -0.5f, 1.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f
 	};
 
+	std::vector<float> lightVertices =
+	{
+		-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f,
+		-0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f,
+		-0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f,
+		-0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f,
+		-0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f,
+		-0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f, 1.0f, 1.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 1.0f,
+		-0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f,
+		-0.5f,  0.5f,  0.5f, 1.0f, 1.0f, 1.0f,
+		-0.5f,  0.5f, -0.5f, 1.0f, 1.0f, 1.0f,
+	};
+
 	unsigned int indices[]
 	{
 		0,1,3,  0,3,2,
@@ -116,42 +160,33 @@ int main(int argc, char** argv)
 
 	if (shader.link_program())
 	{
-		std::cout << "Shader program linked successfully" << std::endl;
+		std::cout << "Cubes shader program was linked successfully" << std::endl;
 	}
 	else
 	{
-		std::cout << "Shader program failed to link!" << std::endl;
+		std::cout << "Cubes shader program was not linked successfully" << std::endl;
 	}
 
-	GLuint vao, vbo, ibo;
+	Shader lightShader;
 
-	int iboSize;
+	lightShader.setVertexShader("../../shaders/lightObj.vert");
+	lightShader.setFragmentShader("../../shaders/lightObj.frag");
 
-	glGenBuffers(1, &vbo);
-	glGenBuffers(1, &ibo);
-	glGenVertexArrays(1, &vao);
+	if (lightShader.link_program())
+	{
+		std::cout << "Lights shader program was linked successfully" << std::endl;
+	}
+	else
+	{
+		std::cout << "Lights shader program was not linked successfully" << std::endl;
+	}
 
-	glBindVertexArray(vao);
+	GLuint vao, vbo;
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices, GL_STATIC_DRAW);
+	GLuint lightVao, lightVbo;
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
-
-	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &iboSize);
-
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)0);
-
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(3 * sizeof(float)));
-
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(6 * sizeof(float)));
-
-	glEnableVertexAttribArray(3);
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(8 * sizeof(float)));
+	prepCubeObjectData(&vao, &vbo, vertices);
+	prepLightObjectData(&lightVao, &lightVbo, lightVertices);
 
 	float 	currentFrame = 0.0f,
 			deltaTime = 0.0f,
@@ -172,8 +207,17 @@ int main(int argc, char** argv)
 	shader.bind();
 
 	shader.setMatrix4("projection", /*projection._elements*/glm::value_ptr(projection));
-	shader.setVector3("ambientLightColor", 1.0f, 1.0f, 1.0f);
+	shader.setVector3("ambientLightColor", 0.1f, 0.1f, 0.1f);
 	shader.setVector3("lightColor", 1.0f, 1.0f, 1.0f);
+	shader.setInteger("tex", 0);
+
+	shader.unbind();
+
+	lightShader.bind();
+
+	lightShader.setMatrix4("projection", glm::value_ptr(projection));
+
+	lightShader.unbind();
 
 	float verticeOffset = 0.0f;
 
@@ -189,9 +233,6 @@ int main(int argc, char** argv)
 		currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
-
-		shader.setFloat("ambientIntensity", .25f);
-		shader.setFloat("specularStrength", .25f);
 
 		if (Input::keyDown(KeyCode::ESCAPE))
 		{
@@ -249,19 +290,24 @@ int main(int argc, char** argv)
 		camera.move(camDirection, xOffset, yOffset, deltaTime, true);
 		view = camera.getViewMatrix();
 
-		shader.setMatrix4("view", /*view._elements*/glm::value_ptr(view));
 
 		if (Input::keyDown(KeyCode::V))
 		{
 			drawWireframe = !drawWireframe;
 		}
 
+		nbFrames++;
+		printFPSandMilliSeconds(nbFrames, lastTimeCount, currentFrame);
+
+
+		shader.bind();
+
+		shader.setMatrix4("view", /*view._elements*/glm::value_ptr(view));
 		shader.setFloat("verticeOffset", verticeOffset);
 		shader.setFloat("time", currentFrame);
 		shader.setVector3("lightPos", lightPos.x, lightPos.y, lightPos.z);
-
-		nbFrames++;
-		printFPSandMilliSeconds(nbFrames, lastTimeCount, currentFrame);
+		shader.setFloat("ambientIntensity", .25f);
+		shader.setFloat("specularStrength", .25f);
 
 		for (int i = 0; i < 10; i++)
 		{
@@ -279,14 +325,76 @@ int main(int argc, char** argv)
 			mesh.draw(drawWireframe);
 		}
 
+		shader.unbind();
+
+		lightShader.bind();
+
+		lightShader.setMatrix4("view", glm::value_ptr(view));
+		lightShader.setFloat("time", currentFrame);
+
+		for (int i = 0; i < 1; i++)
+		{
+			glm::mat4 model;
+			model = glm::translate(model, lightPos);
+
+			lightShader.setMatrix4("model", glm::value_ptr(model));
+			Mesh lightMesh(36);
+			lightMesh.setVBO(&lightVbo);
+			lightMesh.setVAO(&lightVao);
+			lightMesh.draw(false);
+		}
+
+		lightShader.unbind();
+
 		w.update();
 	}
 
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
-	glDeleteBuffers(1, &ibo);
 
 	return 0;
+}
+
+
+void prepCubeObjectData(GLuint* vao, GLuint* vbo, std::vector<float> vertices)
+{
+	glGenBuffers(1, vbo);
+	glGenVertexArrays(1, vao);
+
+	glBindVertexArray(*vao);
+
+	glBindBuffer(GL_ARRAY_BUFFER, *vbo);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)0);
+
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(3 * sizeof(float)));
+
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(6 * sizeof(float)));
+
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(8 * sizeof(float)));
+
+}
+
+void prepLightObjectData(GLuint* vao, GLuint* vbo, std::vector<float> vertices)
+{
+	glGenBuffers(1, vbo);
+	glGenVertexArrays(1, vao);
+
+	glBindVertexArray(*vao);
+
+	glBindBuffer(GL_ARRAY_BUFFER, *vbo);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 }
 
 

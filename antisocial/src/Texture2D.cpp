@@ -15,10 +15,8 @@ Texture2D::Texture2D(const std::string& texturePath)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	setImage(texturePath);
-
 	glGenerateMipmap(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	setImage(texturePath, 0);
 }
 
 Texture2D::~Texture2D()
@@ -33,8 +31,9 @@ void Texture2D::bind(unsigned int unit)
 	glBindTexture(GL_TEXTURE_2D, _handle);
 }
 
-void Texture2D::setImage(const std::string& path)
+void Texture2D::setImage(const std::string& path, unsigned int unit)
 {
+	bind(0);
 	_data = stbi_load(path.c_str(), &_width, &_height, &_numComponents, 4);
 
 	if (_data == NULL)
@@ -45,4 +44,5 @@ void Texture2D::setImage(const std::string& path)
 	}
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, GL_RGBA, GL_UNSIGNED_BYTE, _data);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
