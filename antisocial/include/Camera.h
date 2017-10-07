@@ -48,7 +48,7 @@ namespace antisocial
         inline glm::vec3 getUp() const { return _up; };
         inline glm::vec3 getRight() const { return _right; };
 
-        void move(glm::vec3 direction, float xOffset, float yOffset, float deltaTime, bool constrain);
+        void move(glm::vec3 direction, float speedMultiplier, float xOffset, float yOffset, float deltaTime, bool constrain);
 
     private:
         glm::vec3 _position;

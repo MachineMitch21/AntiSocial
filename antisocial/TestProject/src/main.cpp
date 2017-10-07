@@ -269,11 +269,14 @@ int main(int argc, char** argv)
 
 		glm::vec3 camDirection;
 
+		float camSpeedMultiplier = 1.0f;
+
 		if (Input::keyPressed(KeyCode::W))
 		{
 			camDirection += camera.getFront();
 		}
-		else if (Input::keyPressed(KeyCode::S))
+
+		if (Input::keyPressed(KeyCode::S))
 		{
 			camDirection += -camera.getFront();
 		}
@@ -282,12 +285,18 @@ int main(int argc, char** argv)
 		{
 			camDirection += -glm::normalize(glm::cross(camera.getFront(), camera.getUp()));
 		}
-		else if (Input::keyPressed(KeyCode::D))
+
+		if (Input::keyPressed(KeyCode::D))
 		{
 			camDirection += glm::normalize(glm::cross(camera.getFront(), camera.getUp()));
 		}
 
-		camera.move(camDirection, xOffset, yOffset, deltaTime, true);
+		if (Input::keyPressed(KeyCode::LEFT_SHIFT) || Input::keyPressed(KeyCode::RIGHT_SHIFT))
+		{
+			camSpeedMultiplier = 2.5f;
+		}
+
+		camera.move(camDirection, camSpeedMultiplier, xOffset, yOffset, deltaTime, true);
 		view = camera.getViewMatrix();
 
 

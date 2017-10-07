@@ -73,9 +73,9 @@ float Camera::getFarClip()
     return _farClip;
 }
 
-void Camera::move(glm::vec3 direction, float xOffset, float yOffset, float deltaTime, bool constrain)
+void Camera::move(glm::vec3 direction, float speedMultiplier, float xOffset, float yOffset, float deltaTime, bool constrain)
 {
-    float velocity = _movementSpeed * deltaTime;
+    float velocity = (_movementSpeed * speedMultiplier) * deltaTime;
     _position += direction * velocity;
 
     xOffset *= Input::LookSensitivity;
