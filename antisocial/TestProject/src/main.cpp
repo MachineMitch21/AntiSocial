@@ -200,47 +200,9 @@ int main(int argc, char** argv)
 		glm::vec3( 0.0f, 1.0f, 0.0f)
 	};
 
-	Shader shader;
-
-	shader.setVertexShader("../../shaders/shader.vert");
-	shader.setFragmentShader("../../shaders/shader.frag");
-
-	if (shader.link_program())
-	{
-		std::cout << "Cubes shader program was linked successfully" << std::endl;
-	}
-	else
-	{
-		std::cout << "Cubes shader program was not linked successfully" << std::endl;
-	}
-
-	Shader lightShader;
-
-	lightShader.setVertexShader("../../shaders/lightObj.vert");
-	lightShader.setFragmentShader("../../shaders/lightObj.frag");
-
-	if (lightShader.link_program())
-	{
-		std::cout << "Lights shader program was linked successfully" << std::endl;
-	}
-	else
-	{
-		std::cout << "Lights shader program was not linked successfully" << std::endl;
-	}
-
-	Shader skyboxShader;
-
-	skyboxShader.setVertexShader("../../shaders/skybox.vert");
-	skyboxShader.setFragmentShader("../../shaders/skybox.frag");
-
-	if (skyboxShader.link_program())
-	{
-		std::cout << "Skybox shader program was linked successfully" << std::endl;
-	}
-	else
-	{
-		std::cout << "Skybox shader program was not linked successfully" << std::endl;
-	}
+	Shader shader("../../shaders/shader.vert", "../../shaders/shader.frag");
+	Shader lightShader("../../shaders/lightObj.vert", "../../shaders/lightObj.frag");
+	Shader skyboxShader("../../shaders/skybox.vert", "../../shaders/skybox.frag");
 
 	GLuint vao, vbo, lightVao, lightVbo, skyboxVao, skyboxVbo;
 
@@ -265,16 +227,12 @@ int main(int argc, char** argv)
 			lastFrame = 0.0f;
 
 	float lastTimeCount = glfwGetTime();
+
 	int nbFrames = 0;
 
 	glm::mat4 view;
 	glm::mat4 projection;
-
-	#ifdef _USEORTHO_
-		projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f, 0.1f, 1000.0f);
-	#else
-		projection = glm::perspective(camera.getFOV(), camera.getAspectRatio(), camera.getNearClip(), camera.getFarClip());
-	#endif
+	projection = glm::perspective(camera.getFOV(), camera.getAspectRatio(), camera.getNearClip(), camera.getFarClip());
 
 	shader.bind();
 	shader.setMatrix4("projection", /*projection._elements*/glm::value_ptr(projection));
@@ -294,7 +252,6 @@ int main(int argc, char** argv)
 	float verticeOffset = 0.0f;
 
 	glm::vec3 lightPos = glm::vec3(0.0f, 2.5f, 5.0f);
-
 	glm::vec2 oldMousePos = Input::getCurrentCursorPos();
 
 	// GAME LOOP
@@ -305,6 +262,14 @@ int main(int argc, char** argv)
 		currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
+
+		float xOffset = Input::getCurrentCursorPos().x - oldMousePos.x;
+		float yOffset = oldMousePos.y - Input::getCurrentCursorPos().y;
+
+		oldMousePos = Input::getCurrentCursorPos();
+
+		glm::vec3 camDirection;
+		float camSpeedMultiplier = 1.0f;
 
 		if (Input::keyDown(KeyCode::ESCAPE))
 		{
@@ -333,15 +298,6 @@ int main(int argc, char** argv)
 				verticeOffset = 0.0f;
 			}
 		}
-
-		float xOffset = Input::getCurrentCursorPos().x - oldMousePos.x;
-		float yOffset = oldMousePos.y - Input::getCurrentCursorPos().y;
-
-		oldMousePos = Input::getCurrentCursorPos();
-
-		glm::vec3 camDirection;
-
-		float camSpeedMultiplier = 1.0f;
 
 		if (Input::keyPressed(KeyCode::W))
 		{
@@ -373,27 +329,21 @@ int main(int argc, char** argv)
 			camSpeedMultiplier = 0.5f;
 		}
 
-		camera.move(camDirection, camSpeedMultiplier, xOffset, yOffset, deltaTime, true);
-		view = camera.getViewMatrix();
-
-
 		if (Input::keyDown(KeyCode::V))
 		{
 			drawWireframe = !drawWireframe;
 		}
 
-		nbFrames++;
-		printFPSandMilliSeconds(nbFrames, lastTimeCount, currentFrame);
-
-		skyboxShader.bind();
-		skyboxShader.setMatrix4("view", glm::value_ptr(view));
-		skyboxShader.setFloat("time", currentFrame);
+		camera.move(camDirection, camSpeedMultiplier, xOffset, yOffset, deltaTime, true);
+		view = camera.getViewMatrix();
 
 		glm::mat4 skyboxModel;
 		skyboxModel = glm::translate(skyboxModel, camera.getPosition());
 
+		skyboxShader.bind();
+		skyboxShader.setFloat("time", currentFrame);
+		skyboxShader.setMatrix4("view", glm::value_ptr(view));
 		skyboxShader.setMatrix4("model", glm::value_ptr(skyboxModel));
-
 		skyboxShader.setInteger("cubeTex", 0);
 		skybox.draw();
 		skyboxShader.unbind();
@@ -442,6 +392,9 @@ int main(int argc, char** argv)
 		lightShader.unbind();
 
 		w.update();
+
+		nbFrames++;
+		printFPSandMilliSeconds(nbFrames, lastTimeCount, currentFrame);
 	}
 
 	glDeleteVertexArrays(1, &vao);

@@ -9,6 +9,17 @@ Shader::Shader()
 	_shaders.emplace(GL_FRAGMENT_SHADER, -1);
 }
 
+Shader::Shader(const std::string& vert, const std::string& frag)
+	:	_handle(glCreateProgram())
+{
+	_shaders.emplace(GL_VERTEX_SHADER, -1);
+	_shaders.emplace(GL_FRAGMENT_SHADER, -1);
+
+	setVertexShader(vert);
+	setFragmentShader(frag);
+	link_program();
+}
+
 void Shader::setVertexShader(const std::string& file)
 {
 	std::string shaderSource = load_shader(file);

@@ -17,6 +17,7 @@ namespace antisocial {
 	{
 	public:
 		Shader();
+		Shader(const std::string& vert, const std::string& frag);
 		~Shader();
 
 		void bind();
