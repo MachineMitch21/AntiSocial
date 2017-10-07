@@ -17,6 +17,7 @@ using antisocial::Texture2D;
 using antisocial::Mesh;
 using antisocial::Shader;
 using antisocial::Camera;
+using antisocial::Skybox;
 using antisocial::MOVEMENT_DIRECTION;
 
 using namespace antisocial::input;
@@ -25,6 +26,7 @@ bool drawWireframe = false;
 
 void prepCubeObjectData(GLuint* vao, GLuint* vbo, std::vector<float> vertices);
 void prepLightObjectData(GLuint* vao, GLuint* vbo, std::vector<float> vertices);
+void prepSkyboxObjectData(GLuint* vao, GLuint* vbo, std::vector<float> vertices);
 
 void printFPSandMilliSeconds(int& nbFrames, float& lastTimeCount, float& currentFrame);
 void debug_glm_mat4(glm::mat4& matToDebug);
@@ -43,6 +45,51 @@ int main(int argc, char** argv)
 
 	w.setIcon("../../extras/antisocial_icon.png");
 	w.enableVSYNC(true);
+
+	std::vector<float> skyboxVertices =
+	{
+		-1.0f,  1.0f, -1.0f,
+        -1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+
+        -1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+
+        -1.0f, -1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+
+        -1.0f,  1.0f, -1.0f,
+         1.0f,  1.0f, -1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f, -1.0f,
+
+        -1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+         1.0f, -1.0f,  1.0f
+	};
 
 	std::vector<float> vertices =
 	{
@@ -181,12 +228,37 @@ int main(int argc, char** argv)
 		std::cout << "Lights shader program was not linked successfully" << std::endl;
 	}
 
-	GLuint vao, vbo;
+	Shader skyboxShader;
 
-	GLuint lightVao, lightVbo;
+	skyboxShader.setVertexShader("../../shaders/skybox.vert");
+	skyboxShader.setFragmentShader("../../shaders/skybox.frag");
+
+	if (skyboxShader.link_program())
+	{
+		std::cout << "Skybox shader program was linked successfully" << std::endl;
+	}
+	else
+	{
+		std::cout << "Skybox shader program was not linked successfully" << std::endl;
+	}
+
+	GLuint vao, vbo, lightVao, lightVbo, skyboxVao, skyboxVbo;
 
 	prepCubeObjectData(&vao, &vbo, vertices);
 	prepLightObjectData(&lightVao, &lightVbo, lightVertices);
+	prepSkyboxObjectData(&skyboxVao, &skyboxVbo, skyboxVertices);
+
+	Mesh* skyboxMesh = new Mesh(36);
+	skyboxMesh->setVAO(&skyboxVao);
+	skyboxMesh->setVBO(&skyboxVbo);
+
+	Skybox skybox(	"../../extras/skybox/cloudtop_ft.tga",
+	"../../extras/skybox/cloudtop_bk.tga",
+	"../../extras/skybox/cloudtop_up.tga",
+	"../../extras/skybox/cloudtop_dn.tga",
+	"../../extras/skybox/cloudtop_rt.tga",
+	"../../extras/skybox/cloudtop_lf.tga",
+	skyboxMesh);
 
 	float 	currentFrame = 0.0f,
 			deltaTime = 0.0f,
@@ -205,19 +277,19 @@ int main(int argc, char** argv)
 	#endif
 
 	shader.bind();
-
 	shader.setMatrix4("projection", /*projection._elements*/glm::value_ptr(projection));
 	shader.setVector3("ambientLightColor", 0.1f, 0.1f, 0.1f);
 	shader.setVector3("lightColor", 1.0f, 1.0f, 1.0f);
 	shader.setInteger("tex", 0);
-
 	shader.unbind();
 
 	lightShader.bind();
-
 	lightShader.setMatrix4("projection", glm::value_ptr(projection));
-
 	lightShader.unbind();
+
+	skyboxShader.bind();
+	skyboxShader.setMatrix4("projection", glm::value_ptr(projection));
+	skyboxShader.unbind();
 
 	float verticeOffset = 0.0f;
 
@@ -296,6 +368,11 @@ int main(int argc, char** argv)
 			camSpeedMultiplier = 2.5f;
 		}
 
+		if (Input::keyPressed(KeyCode::LEFT_CTRL))
+		{
+			camSpeedMultiplier = 0.5f;
+		}
+
 		camera.move(camDirection, camSpeedMultiplier, xOffset, yOffset, deltaTime, true);
 		view = camera.getViewMatrix();
 
@@ -308,9 +385,20 @@ int main(int argc, char** argv)
 		nbFrames++;
 		printFPSandMilliSeconds(nbFrames, lastTimeCount, currentFrame);
 
+		skyboxShader.bind();
+		skyboxShader.setMatrix4("view", glm::value_ptr(view));
+		skyboxShader.setFloat("time", currentFrame);
+
+		glm::mat4 skyboxModel;
+		skyboxModel = glm::translate(skyboxModel, camera.getPosition());
+
+		skyboxShader.setMatrix4("model", glm::value_ptr(skyboxModel));
+
+		skyboxShader.setInteger("cubeTex", 0);
+		skybox.draw();
+		skyboxShader.unbind();
 
 		shader.bind();
-
 		shader.setMatrix4("view", /*view._elements*/glm::value_ptr(view));
 		shader.setFloat("verticeOffset", verticeOffset);
 		shader.setFloat("time", currentFrame);
@@ -333,11 +421,9 @@ int main(int argc, char** argv)
 			mesh.setVAO(&vao);
 			mesh.draw(drawWireframe);
 		}
-
 		shader.unbind();
 
 		lightShader.bind();
-
 		lightShader.setMatrix4("view", glm::value_ptr(view));
 		lightShader.setFloat("time", currentFrame);
 
@@ -353,7 +439,6 @@ int main(int argc, char** argv)
 			lightMesh.setVAO(&lightVao);
 			lightMesh.draw(false);
 		}
-
 		lightShader.unbind();
 
 		w.update();
@@ -407,6 +492,19 @@ void prepLightObjectData(GLuint* vao, GLuint* vbo, std::vector<float> vertices)
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 }
 
+void prepSkyboxObjectData(GLuint* vao, GLuint* vbo, std::vector<float> vertices)
+{
+	glGenBuffers(1, vbo);
+	glGenVertexArrays(1, vao);
+
+	glBindVertexArray(*vao);
+
+	glBindBuffer(GL_ARRAY_BUFFER, *vbo);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)(0));
+}
 
 void printFPSandMilliSeconds(int& nbFrames, float& lastTimeCount, float& currentFrame)
 {

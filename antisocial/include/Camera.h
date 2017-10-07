@@ -44,6 +44,8 @@ namespace antisocial
         float getNearClip();
         float getFarClip();
 
+        inline glm::vec3 getPosition() const { return _position; };
+
         inline glm::vec3 getFront() const { return _front; };
         inline glm::vec3 getUp() const { return _up; };
         inline glm::vec3 getRight() const { return _right; };
