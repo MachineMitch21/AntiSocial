@@ -9,9 +9,6 @@
 
 #include <math.h>
 
-//#define _USEORTHO_
-#define __VIRTUAL_BOX__
-
 using antisocial::Matrix4;
 using antisocial::Vector3;
 using antisocial::Texture2D;
@@ -267,7 +264,7 @@ int main(int argc, char** argv)
 
 		float xOffset = 0.0f;
 		float yOffset = 0.0f;
-		
+
  	#ifdef __VIRTUAL_BOX__
 		if (Input::mouseButtonPressed(MouseButton::M_RIGHT))
 		{
