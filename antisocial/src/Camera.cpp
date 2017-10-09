@@ -31,7 +31,6 @@ Camera::~Camera()
 glm::mat4 Camera::getViewMatrix()
 {
     return glm::lookAt(_position, _position + _front, _up);
-    std::cout << "the" << std::endl;
 }
 
 void Camera::setFOV(float fov)
