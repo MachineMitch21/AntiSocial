@@ -15,23 +15,16 @@ Shader::Shader(const std::string& vert, const std::string& frag)
 	_shaders.emplace(GL_VERTEX_SHADER, -1);
 	_shaders.emplace(GL_FRAGMENT_SHADER, -1);
 
-	setVertexShader(vert);
-	setFragmentShader(frag);
+	submitShaderFile(vert, GL_VERTEX_SHADER);
+	submitShaderFile(frag, GL_FRAGMENT_SHADER);
 	link_program();
 }
 
-void Shader::setVertexShader(const std::string& file)
+void Shader::submitShaderFile(const std::string& file, GLenum type)
 {
-	std::string shaderSource = load_shader(file);
-	GLuint shaderID = compile_shader(shaderSource, GL_VERTEX_SHADER);
-	_shaders.at(GL_VERTEX_SHADER) = shaderID;
-}
-
-void Shader::setFragmentShader(const std::string& file)
-{
-	std::string shaderSource = load_shader(file);
-	GLuint shaderID = compile_shader(shaderSource, GL_FRAGMENT_SHADER);
-	_shaders.at(GL_FRAGMENT_SHADER) = shaderID;
+	std::string shaderSrc = load_shader(file);
+	GLuint shaderID = compile_shader(shaderSrc, type);
+	_shaders.at(type) = shaderID;
 }
 
 void Shader::bind()

@@ -25,8 +25,7 @@ namespace antisocial {
 
 		GLuint& getProgram();
 
-		void setVertexShader(const std::string& file);
-		void setFragmentShader(const std::string& file);
+		void submitShaderFile(const std::string& file, GLenum type);
 
 		//Only to be called if every shader type needed for the shader
 		//program has been given to the shader object
