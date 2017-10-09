@@ -1,12 +1,14 @@
 #ifndef __DRAWABLE_H__
 #define __DRAWABLE_H__
 
+#include <AntisocialDLL.h>
+
 #include <GL/glew.h>
 
 namespace antisocial
 {
 
-    class Drawable
+    class ANTISOCIAL_API Drawable
     {
     public:
         Drawable();

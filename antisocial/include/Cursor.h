@@ -2,11 +2,13 @@
 #ifndef __CURSOR_H__
 #define __CURSOR_H__
 
+#include <AntisocialDLL.h>
+
 namespace antisocial
 {
     namespace input
     {
-        class Cursor
+        class ANTISOCIAL_API Cursor
         {
         public:
 

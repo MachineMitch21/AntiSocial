@@ -1,4 +1,4 @@
-
+#include <AntiSocialDLL.h>
 #include <Window.h>
 #include <Monitor.h>
 #include <Input.h>

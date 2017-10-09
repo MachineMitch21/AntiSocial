@@ -2,6 +2,8 @@
 #ifndef __TRANSFORM_H__
 #define __TRANSFORM_H__
 
+#include <AntiSocialDLL.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -9,7 +11,7 @@
 namespace antisocial
 {
 
-    class Transform
+    class ANTISOCIAL_API Transform
     {
     public:
         Transform();

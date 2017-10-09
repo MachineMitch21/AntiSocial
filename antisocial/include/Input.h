@@ -2,6 +2,8 @@
 #ifndef __INPUT_H__
 #define __INPUT_H__
 
+#include <AntisocialDLL.h>
+
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
@@ -132,7 +134,7 @@ namespace antisocial
             M_MIDDLE  = GLFW_MOUSE_BUTTON_3,
         };
 
-        class Input
+        class ANTISOCIAL_API Input
         {
 
         public:

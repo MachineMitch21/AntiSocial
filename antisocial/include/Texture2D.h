@@ -1,13 +1,15 @@
 #ifndef __TEXTURE2D_H__
 #define __TEXTURE2D_H__
 
+#include <AntiSocialDLL.h>
+
 #include <string>
 #include <GL/glew.h>
 #include <stb_image.h>
 
 namespace antisocial {
 
-	class Texture2D {
+	class ANTISOCIAL_API Texture2D {
 
 	public:
 		Texture2D(const std::string& texturePath);

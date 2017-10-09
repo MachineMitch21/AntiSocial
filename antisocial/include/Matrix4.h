@@ -1,32 +1,33 @@
 #ifndef __MATRIX4_H__
 #define __MATRIX4_H__
 
+#include <AntisocialDLL.h>
+
 #include <Vector3.h>
 #include <vector>
-#include <math.h>
+#include <cmath>
 
 using antisocial::Vector3;
 
-#define _USE_MATH_DEFINES_
-
+#define PI  3.14159265358979323846
 
 namespace antisocial {
 
 	float radians(float degrees)
 	{
-		return degrees * (M_PI / 180.0f);
+		return degrees * (PI / 180.0f);
 	}
 
-	class Matrix4 {
+	class ANTISOCIAL_API Matrix4 {
 
 	public:
 		Matrix4();
-		Matrix4(float diagonal);		
+		Matrix4(float diagonal);
 
 		~Matrix4();
 
 		inline const float* getElements() const { return _elements; }
-		
+
 		static Matrix4 identity();
 
 		Matrix4& multiply(const Matrix4& other);
@@ -43,7 +44,7 @@ namespace antisocial {
 
 		friend Matrix4 operator*(Matrix4 left, const Matrix4& right);
 		Matrix4& operator*=(const Matrix4& other);
-		
+
 	public:
 		float _elements[16];
 	};

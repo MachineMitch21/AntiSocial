@@ -2,13 +2,15 @@
 #ifndef __MESH_H__
 #define __MESH_H__
 
+#include <AntisocialDLL.h>
+
 #include <Drawable.h>
 #include <Shader.h>
 
 namespace antisocial
 {
 
-    class Mesh : public Drawable
+    class ANTISOCIAL_API Mesh : public Drawable
     {
     public:
         Mesh(unsigned int numVertices);

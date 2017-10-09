@@ -2,6 +2,8 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#include <AntiSocialDLL.h>
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <string>
@@ -9,7 +11,7 @@
 
 namespace antisocial {
 
-	class Window
+	class ANTISOCIAL_API Window
 	{
 	public:
 		Window(const std::string title, int width, int height);

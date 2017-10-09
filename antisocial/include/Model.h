@@ -2,10 +2,12 @@
 #ifndef __MODEL_H__
 #define __MODEL_H__
 
+#include <AntisocialDLL.h>
+
 namespace antisocial
 {
 
-    class Model
+    class ANTISOCIAL_API Model
     {
     public:
         Model();

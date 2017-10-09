@@ -1,6 +1,8 @@
 #ifndef __SKYBOX_H__
 #define __SKYBOX_H__
 
+#include <AntiSocialDLL.h>
+
 #include <GL/glew.h>
 #include <string>
 #include <iostream>
@@ -20,7 +22,7 @@ using antisocial::Mesh;
 namespace antisocial
 {
 
-    class Skybox
+    class ANTISOCIAL_API Skybox
     {
     public:
         Skybox(std::string front, std::string back, std::string top, std::string bottom, std::string right, std::string left, Mesh* mesh);

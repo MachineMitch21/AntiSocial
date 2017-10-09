@@ -2,10 +2,12 @@
 #ifndef __SCENE_H__
 #define __SCENE_H__
 
+#include <AntiSocialDLL.h>
+
 namespace antisocial
 {
 
-    class Scene
+    class ANTISOCIAL_API Scene
     {
     public:
         Scene();

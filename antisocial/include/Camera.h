@@ -1,6 +1,8 @@
 #ifndef __CAMERA_H__
 #define __CAMERA_H__
 
+#include <AntisocialDLL.h>
+
 #include <Vector3.h>
 #include <Input.h>
 #include <math.h>
@@ -18,7 +20,7 @@ namespace antisocial
         RIGHT
     };
 
-    class Camera
+    class ANTISOCIAL_API Camera
     {
     public:
         Camera(float fov, float x, float y, float z, float aspectRatio, float nearClip, float farClip);

@@ -2,10 +2,12 @@
 #ifndef __MONITOR_H__
 #define __MONITOR_H__
 
+#include <AntisocialDLL.h>
+
 namespace antisocial
 {
 
-    class Monitor
+    class ANTISOCIAL_API Monitor
     {
     public:
         Monitor();

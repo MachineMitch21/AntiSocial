@@ -2,6 +2,8 @@
 #ifndef __SHADER_H__
 #define __SHADER_H__
 
+#include <AntiSocialDLL.h>
+
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -13,7 +15,7 @@
 
 namespace antisocial {
 
-	class Shader
+	class ANTISOCIAL_API Shader
 	{
 	public:
 		Shader();

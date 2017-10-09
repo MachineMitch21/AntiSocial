@@ -2,6 +2,8 @@
 #ifndef __MATERIAL_H__
 #define __MATERIAL_H__
 
+#include <AntisocialDLL.h>
+
 #include <memory>
 
 #include <Shader.h>
@@ -11,7 +13,7 @@ using antisocial::Shader;
 namespace antisocial
 {
 
-    class Material
+    class ANTISOCIAL_API Material
     {
     public:
         Material(std::shared_ptr<Shader> shader);
