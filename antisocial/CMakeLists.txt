@@ -10,7 +10,7 @@ file(GLOB SOURCES src/*.cpp src/*.c)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
-add_definitions(-DGLEW_STATIC -DGLEW_NO_GLU)
+add_definitions(-DGLEW_NO_GLU)
 include_directories(${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/external)
 link_directories(${PROJECT_SOURCE_DIR}/lib)
 
@@ -19,5 +19,5 @@ target_link_libraries(${PROJECT_NAME} GLEW glfw3 GL X11 Xi Xrandr Xxf86vm Xinera
 endif (UNIX)
 
 if (WIN32)
-target_link_libraries(${PROJECT_NAME} GLEW glfw3 GL opengl32 user32 kernel32)
+target_link_libraries(${PROJECT_NAME} glew32 glfw3dll opengl32 user32 kernel32)
 endif (WIN32)
