@@ -214,8 +214,8 @@ int main(int argc, char** argv)
 	skyboxMesh->setVAO(&skyboxVao);
 	skyboxMesh->setVBO(&skyboxVbo);
 
-	std::string orbitalElement = "../../extras/skybox/orbital-element";
-	std::string cloudtop = "../../extras/skybox/cloudtop";
+	std::string orbitalElement = "../../extras/skybox/orbital-element/orbital-element";
+	std::string cloudtop = "../../extras/skybox/cloudtop/cloudtop";
 
 	Skybox skybox(	orbitalElement + "_ft.tga",
 					orbitalElement + "_bk.tga",
