@@ -105,7 +105,7 @@ bool Shader::linkProgram() {
 
 	if (!_success) {
 		glGetProgramInfoLog(_handle, ERR_LOG, NULL, _errLog);
-		std::cout << "ERROR linking shader program:: " << _handle << " ::\n" << _errLog << std::endl;
+		std::cout << "ERROR linking shader program ((-" << _handle << "-))\n\n" << _errLog << std::endl;
 		return false;
 	}
 
@@ -138,7 +138,7 @@ GLuint Shader::compile_shader(const std::string& shader_src, GLenum shader_type)
 	//If compilation had errors
 	if (!_success) {
 		glGetShaderInfoLog(shader, ERR_LOG, NULL, _errLog);
-		std::cout << "Error compiling shader::- " << shader << " -::\n" << _errLog << std::endl;
+		std::cout << "\n SHADER COMPILATION ERROR ((- " << shader << " -))\n\n" << _errLog << std::endl;
 	}
 
 	return shader;

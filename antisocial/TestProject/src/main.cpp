@@ -214,13 +214,16 @@ int main(int argc, char** argv)
 	skyboxMesh->setVAO(&skyboxVao);
 	skyboxMesh->setVBO(&skyboxVbo);
 
-	Skybox skybox(	"../../extras/skybox/cloudtop_ft.tga",
-	"../../extras/skybox/cloudtop_bk.tga",
-	"../../extras/skybox/cloudtop_up.tga",
-	"../../extras/skybox/cloudtop_dn.tga",
-	"../../extras/skybox/cloudtop_rt.tga",
-	"../../extras/skybox/cloudtop_lf.tga",
-	skyboxMesh);
+	std::string orbitalElement = "../../extras/skybox/orbital-element";
+	std::string cloudtop = "../../extras/skybox/cloudtop";
+
+	Skybox skybox(	orbitalElement + "_ft.tga",
+					orbitalElement + "_bk.tga",
+					orbitalElement + "_up.tga",
+					orbitalElement + "_dn.tga",
+					orbitalElement + "_rt.tga",
+					orbitalElement + "_lf.tga",
+					skyboxMesh);
 
 	float 	currentFrame = 0.0f,
 			deltaTime = 0.0f,
@@ -394,7 +397,7 @@ int main(int argc, char** argv)
 		w.update();
 
 		nbFrames++;
-		printFPSandMilliSeconds(nbFrames, lastTimeCount, currentFrame);
+		//printFPSandMilliSeconds(nbFrames, lastTimeCount, currentFrame);
 	}
 
 	glDeleteVertexArrays(1, &vao);

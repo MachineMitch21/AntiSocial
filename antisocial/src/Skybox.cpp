@@ -9,6 +9,8 @@ Skybox::Skybox(std::string front, std::string back, std::string top, std::string
     glActiveTexture(GL_TEXTURE0);
     glGenTextures(1, &_cubeMapHandle);
 
+    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+
     loadSideTexture(CUBE_MAP_FRONT, front);
     loadSideTexture(CUBE_MAP_BACK, back);
     loadSideTexture(CUBE_MAP_RIGHT, right);
