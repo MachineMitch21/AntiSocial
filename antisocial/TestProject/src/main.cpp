@@ -10,6 +10,7 @@
 #include <math.h>
 
 //#define _USEORTHO_
+#define __VIRTUAL_BOX__
 
 using antisocial::Matrix4;
 using antisocial::Vector3;
@@ -35,8 +36,6 @@ int main(int argc, char** argv)
 {
 	antisocial::Window w("ANTISOCIAL TEST PROJECT", 800, 600);
 	Input i;
-
-	w.setCursor(false);
 
 	Camera camera(45.0f, 0.0f, 0.0f, 10.0f, (float)w.getWidth() / (float)w.getHeight(), 0.1f, 1000.0f);
 
@@ -266,9 +265,19 @@ int main(int argc, char** argv)
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		float xOffset = Input::getCurrentCursorPos().x - oldMousePos.x;
-		float yOffset = oldMousePos.y - Input::getCurrentCursorPos().y;
-
+		float xOffset = 0.0f;
+		float yOffset = 0.0f;
+		
+ 	#ifdef __VIRTUAL_BOX__
+		if (Input::mouseButtonPressed(MouseButton::M_RIGHT))
+		{
+			xOffset = Input::getCurrentCursorPos().x - oldMousePos.x;
+			yOffset = oldMousePos.y - Input::getCurrentCursorPos().y;
+		}
+	#else
+		xOffset = Input::getCurrentCursorPos().x - oldMousePos.x;
+		yOffset = oldMousePos.y - Input::getCurrentCursorPos().y;
+	#endif
 		oldMousePos = Input::getCurrentCursorPos();
 
 		glm::vec3 camDirection;
