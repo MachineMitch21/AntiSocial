@@ -5,19 +5,17 @@ using antisocial::Shader;
 Shader::Shader()
 	:	_handle(glCreateProgram())
 {
-	_shaders.emplace(GL_VERTEX_SHADER, -1);
-	_shaders.emplace(GL_FRAGMENT_SHADER, -1);
+	init_shader_map();
 }
 
 Shader::Shader(const std::string& vert, const std::string& frag)
 	:	_handle(glCreateProgram())
 {
-	_shaders.emplace(GL_VERTEX_SHADER, -1);
-	_shaders.emplace(GL_FRAGMENT_SHADER, -1);
+ 	init_shader_map();
 
 	submitShaderFile(vert, GL_VERTEX_SHADER);
 	submitShaderFile(frag, GL_FRAGMENT_SHADER);
-	link_program();
+	linkProgram();
 }
 
 void Shader::submitShaderFile(const std::string& file, GLenum type)
@@ -89,7 +87,7 @@ GLuint& Shader::getProgram() {
 	return _handle;
 }
 
-bool Shader::link_program() {
+bool Shader::linkProgram() {
 
 	//Attach shaders to newly create program and then link everything
 	for (std::map<GLenum, GLuint>::iterator it = _shaders.begin(); it != _shaders.end(); ++it)
@@ -112,6 +110,12 @@ bool Shader::link_program() {
 	}
 
 	return true;
+}
+
+void Shader::init_shader_map()
+{
+	_shaders.emplace(GL_VERTEX_SHADER, -1);
+	_shaders.emplace(GL_FRAGMENT_SHADER, -1);
 }
 
 GLuint Shader::compile_shader(const std::string& shader_src, GLenum shader_type) {
