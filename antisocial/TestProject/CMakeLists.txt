@@ -10,12 +10,13 @@ SET(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH}../build)
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 include_directories(${PROJECT_SOURCE_DIR}/../include ${PROJECT_SOURCE_DIR}/../external)
-find_library(ASLIB antisocial)
+SET(CMAKE_FIND_LIBRARY_SUFFIXES ".dll" ".a")
 
 if (UNIX)
+find_library(ASLIB antisocial)
 target_link_libraries(${PROJECT_NAME} ${ASLIB} GL GLEW)
 endif (UNIX)
 
 if (WIN32)
-target_link_libraries(${PROJECT_NAME} ${ASLIB} glew32 glfw3dll opengl32 kernel32 user32)
+target_link_libraries(${PROJECT_NAME} antisocial glew32 glfw3dll opengl32 kernel32 user32)
 endif (WIN32)

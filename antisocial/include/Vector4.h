@@ -1,12 +1,14 @@
 #ifndef VECTOR4_H
 #define VECTOR4_H
 
+#include <AntiSocialDLL.h>
+
 #include <iostream>
 
 using std::ostream;
 
 namespace as_math {
-	class Vector4
+	class ANTISOCIAL_API Vector4
 	{
 	public:
 		Vector4(float x, float y, float z, float w);

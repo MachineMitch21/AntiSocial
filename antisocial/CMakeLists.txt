@@ -10,7 +10,7 @@ file(GLOB SOURCES src/*.cpp src/*.c)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
-add_definitions(-DDLL_EXPORT -DGLEW_NO_GLU)
+add_definitions(-DANTISOCIAL_EXPORT -DGLEW_STATIC -DGLEW_NO_GLU)
 include_directories(${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/external)
 link_directories(${PROJECT_SOURCE_DIR}/lib)
 

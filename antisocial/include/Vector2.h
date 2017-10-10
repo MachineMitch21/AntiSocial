@@ -1,13 +1,15 @@
 #ifndef VECTOR2_H
 #define VECTOR2_H
 
+#include <AntiSocialDLL.h>
+
 #include <iostream>
 
 using std::ostream;
 
 namespace antisocial {
 
-	class Vector2
+	class ANTISOCIAL_API Vector2
 	{
 	public:
 		Vector2(float x, float y);
@@ -22,7 +24,7 @@ namespace antisocial {
 		Vector2 operator+(const Vector2& v);
 		Vector2 operator-(const Vector2& v);
 
-		
+
 
 		friend ostream& operator<<(ostream& os, const Vector2& v) {
 			return os << "(" << v._x << ", " << v._y << ")";

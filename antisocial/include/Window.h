@@ -53,11 +53,11 @@ namespace antisocial {
 
 	};
 
-	void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
-	void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-	void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-	void window_iconify_callback(GLFWwindow* window, int iconified);
-	void error_callback(int error, const char* description);
+	void ANTISOCIAL_API cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
+	void ANTISOCIAL_API framebuffer_size_callback(GLFWwindow* window, int width, int height);
+	void ANTISOCIAL_API scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+	void ANTISOCIAL_API window_iconify_callback(GLFWwindow* window, int iconified);
+	void ANTISOCIAL_API error_callback(int error, const char* description);
 
 }
 
